@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Hitung Gaji Karyawan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --hijau:#0E5E4A;
+    --hijau-tua:#093F31;
+    --kertas:#F5F4EE;
+    --putih:#FFFFFF;
+    --tinta:#1B1F24;
+    --abu:#6B7280;
+    --garis:#E2E0D8;
+    --amber:#B45309;
+    --merah:#B91C1C;
+    --radius:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+    background:var(--kertas);
+    color:var(--tinta);
+    font-size:15px;
+    padding-bottom:140px;
+  }
+  .angka{font-variant-numeric:tabular-nums}
+
+  /* ===== HEADER ===== */
+  header{
+    background:var(--hijau);
+    color:#fff;
+    padding:18px 16px 20px;
+  }
+  .header-inner{max-width:680px;margin:0 auto}
+  header h1{font-size:19px;font-weight:800;letter-spacing:-.02em}
+  header .sub{font-size:12.5px;opacity:.85;margin-top:2px}
+  .header-row{display:flex;gap:8px;margin-top:14px}
+  .header-row input{
+    flex:1;border:none;border-radius:10px;padding:10px 12px;
+    font-family:inherit;font-size:14px;font-weight:600;color:var(--tinta);
+    min-width:0;
+  }
+
+  main{max-width:680px;margin:0 auto;padding:16px}
+
+  /* ===== PENGATURAN ===== */
+  details.pengaturan{
+    background:var(--putih);border:1px solid var(--garis);
+    border-radius:var(--radius);margin-bottom:14px;overflow:hidden;
+  }
+  details.pengaturan summary{
+    padding:13px 16px;font-weight:700;font-size:14px;cursor:pointer;
+    list-style:none;display:flex;justify-content:space-between;align-items:center;
+    -webkit-user-select:none;user-select:none;
+  }
+  details.pengaturan summary::after{content:"▾";color:var(--abu);transition:transform .2s}
+  details.pengaturan[open] summary::after{transform:rotate(180deg)}
+  .pengaturan-body{padding:0 16px 16px;display:grid;gap:12px}
+  .field label{display:block;font-size:12.5px;font-weight:600;color:var(--abu);margin-bottom:5px}
+  .field input[type=text]{
+    width:100%;border:1.5px solid var(--garis);border-radius:10px;
+    padding:11px 12px;font-family:inherit;font-size:16px;font-weight:600;
+    background:var(--putih);
+  }
+  .field input:focus{outline:2px solid var(--hijau);outline-offset:0;border-color:var(--hijau)}
+  .toggle-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .toggle-row .keterangan{font-size:13px;font-weight:600}
+  .toggle-row .keterangan small{display:block;font-weight:400;color:var(--abu);font-size:11.5px;margin-top:2px}
+  .saklar{position:relative;width:46px;height:26px;flex-shrink:0}
+  .saklar input{opacity:0;width:0;height:0}
+  .saklar span{
+    position:absolute;inset:0;background:#C9C7BE;border-radius:26px;cursor:pointer;transition:.2s;
+  }
+  .saklar span::before{
+    content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;
+    background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25);
+  }
+  .saklar input:checked + span{background:var(--hijau)}
+  .saklar input:checked + span::before{transform:translateX(20px)}
+
+  .backup-blok{border-top:1px solid var(--garis);padding-top:14px;margin-top:2px}
+  .backup-judul{font-size:12.5px;font-weight:600;color:var(--abu);margin-bottom:8px}
+  .backup-tombol-baris{display:flex;gap:10px}
+  .tombol-backup{
+    flex:1;border:1.5px solid var(--hijau);border-radius:10px;background:transparent;
+    color:var(--hijau);font-family:inherit;font-size:13.5px;font-weight:700;
+    padding:10px 8px;cursor:pointer;
+  }
+  .tombol-backup:active{background:rgba(14,94,74,.08)}
+  .backup-ket{font-size:11.5px;color:var(--abu);margin-top:8px;line-height:1.5}
+
+  /* ===== KARTU KARYAWAN ===== */
+  .kartu{
+    background:var(--putih);border:1px solid var(--garis);
+    border-radius:var(--radius);margin-bottom:14px;overflow:hidden;
+  }
+  .kartu-atas{
+    display:flex;align-items:center;gap:10px;padding:14px 16px;
+    border-bottom:1px dashed var(--garis);
+  }
+  .kartu-atas .nomor{
+    width:26px;height:26px;border-radius:50%;background:var(--hijau);color:#fff;
+    font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .kartu-atas input.nama{
+    flex:1;border:none;border-bottom:1.5px dashed var(--garis);font-family:inherit;font-size:16.5px;font-weight:800;
+    color:var(--tinta);background:transparent;min-width:0;letter-spacing:-.01em;padding-bottom:3px;
+  }
+  .kartu-atas input.nama:focus{outline:none;border-bottom:2px solid var(--hijau)}
+  .kartu-atas .ikon-edit{color:var(--abu);font-size:13px;flex-shrink:0;margin-right:-2px}
+  .hapus{
+    background:none;border:none;color:var(--abu);font-size:20px;cursor:pointer;
+    padding:4px 6px;line-height:1;flex-shrink:0;
+  }
+  .kartu-body{padding:14px 16px;display:grid;gap:12px}
+  .baris-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+  .uang-wrap{position:relative}
+  .uang-wrap .rp{
+    position:absolute;left:12px;top:50%;transform:translateY(-50%);
+    font-size:13px;font-weight:700;color:var(--abu);
+  }
+  .uang-wrap input{
+    width:100%;border:1.5px solid var(--garis);border-radius:10px;
+    padding:11px 12px 11px 40px;font-family:inherit;font-size:16px;font-weight:700;
+    background:var(--putih);text-align:right;
+  }
+
+  .stepper{display:flex;align-items:stretch;border:1.5px solid var(--garis);border-radius:10px;overflow:hidden}
+  .stepper button{
+    width:44px;border:none;background:var(--kertas);font-size:20px;font-weight:700;
+    color:var(--hijau);cursor:pointer;font-family:inherit;
+  }
+  .stepper button:active{background:#E8E6DE}
+  .stepper input{
+    flex:1;border:none;text-align:center;font-family:inherit;font-size:16px;
+    font-weight:800;min-width:0;padding:11px 0;
+  }
+  .stepper input:focus{outline:none}
+
+  /* kasbon per tanggal */
+  .kasbon-blok{border:1.5px solid var(--garis);border-radius:10px;padding:10px 12px;display:grid;gap:8px}
+  .kasbon-baris{display:flex;gap:8px;align-items:center}
+  .kasbon-baris input[type=date]{
+    border:1px solid var(--garis);border-radius:8px;padding:8px 6px;
+    font-family:inherit;font-size:13px;font-weight:600;width:128px;flex-shrink:0;
+    background:var(--putih);color:var(--tinta);
+  }
+  .kasbon-baris .uang-wrap{flex:1;min-width:0}
+  .kasbon-baris .uang-wrap input{padding:8px 10px 8px 36px;font-size:14.5px}
+  .kasbon-baris .uang-wrap .rp{left:10px;font-size:12px}
+  .kasbon-baris .hapus-kecil{
+    background:none;border:none;color:var(--abu);font-size:16px;cursor:pointer;
+    padding:4px;line-height:1;flex-shrink:0;
+  }
+  .kasbon-tambah{
+    background:none;border:none;color:var(--hijau);font-family:inherit;
+    font-size:13px;font-weight:700;cursor:pointer;text-align:left;padding:2px 0;
+  }
+  .kasbon-kosong{font-size:12.5px;color:var(--abu)}
+  .kasbon-total{
+    display:flex;justify-content:space-between;font-size:13px;font-weight:700;
+    border-top:1px dashed var(--garis);padding-top:8px;
+  }
+
+  /* ringkasan per karyawan */
+  .rincian{
+    background:var(--kertas);border-radius:10px;padding:12px 14px;
+    font-size:13.5px;display:grid;gap:7px;
+  }
+  .rincian .r{display:flex;justify-content:space-between;gap:10px}
+  .rincian .r span:first-child{color:var(--abu)}
+  .rincian .r .minus{color:var(--merah);font-weight:700}
+  .rincian .r .plus{color:var(--hijau);font-weight:700}
+  .rincian .r.total{
+    border-top:1.5px solid var(--garis);padding-top:9px;margin-top:2px;
+    font-weight:800;font-size:15.5px;
+  }
+  .rincian .r.total .negatif{color:var(--merah)}
+  .catatan-hangus{font-size:11.5px;color:var(--amber);font-weight:600}
+
+  /* ===== TOMBOL ===== */
+  .tombol-tambah{
+    width:100%;padding:14px;border:2px dashed var(--hijau);border-radius:var(--radius);
+    background:transparent;color:var(--hijau);font-family:inherit;font-size:15px;
+    font-weight:700;cursor:pointer;margin-bottom:14px;
+  }
+  .tombol-tambah:active{background:rgba(14,94,74,.08)}
+
+  /* ===== BAR TOTAL BAWAH ===== */
+  .bar-total{
+    position:fixed;left:0;right:0;bottom:0;z-index:50;
+    background:var(--hijau-tua);color:#fff;
+    padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  }
+  .bar-inner{max-width:680px;margin:0 auto;display:flex;align-items:center;gap:12px}
+  .bar-info{flex:1;min-width:0}
+  .bar-info .label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.75;font-weight:600}
+  .bar-info .nilai{font-size:20px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tombol-cetak{
+    background:#fff;color:var(--hijau-tua);border:none;border-radius:10px;
+    padding:12px 18px;font-family:inherit;font-size:14.5px;font-weight:800;
+    cursor:pointer;flex-shrink:0;
+  }
+  .tombol-cetak:active{transform:scale(.97)}
+
+  .kosong{
+    text-align:center;color:var(--abu);padding:30px 16px;font-size:14px;
+  }
+
+  /* ===== CETAK / PRINT A4 ===== */
+  .halaman-cetak{display:none}
+  @media print{
+    @page{size:A4 portrait;margin:14mm 12mm}
+    body{background:#fff;padding:0;font-size:11px}
+    header,main,.bar-total{display:none !important}
+    .halaman-cetak{display:block;color:#000}
+    .cetak-kop{text-align:center;border-bottom:2.5px solid #000;padding-bottom:8px;margin-bottom:4px}
+    .cetak-kop h2{font-size:16px;font-weight:800;letter-spacing:.02em;text-transform:uppercase}
+    .cetak-kop .periode{font-size:12px;margin-top:3px}
+    .cetak-kop .judul-doc{font-size:11px;color:#333;margin-top:1px}
+    table.cetak{width:100%;border-collapse:collapse;margin-top:10px}
+    table.cetak th,table.cetak td{
+      border:1px solid #000;padding:5px 6px;text-align:right;
+      font-variant-numeric:tabular-nums;
+    }
+    table.cetak th{background:#EFEFEF;font-size:10px;text-align:center;font-weight:700}
+    table.cetak td.kiri{text-align:left}
+    table.cetak td.tengah{text-align:center}
+    table.cetak td.ttd{height:34px;width:70px}
+    table.cetak tr.jumlah td{font-weight:800;background:#F7F7F7}
+    .cetak-kasbon{margin-top:16px}
+    .cetak-kasbon .judul-kasbon{font-size:11px;font-weight:800;margin-bottom:4px;text-transform:uppercase;letter-spacing:.03em}
+    table.kasbon-detail th,table.kasbon-detail td{font-size:10px;padding:4px 6px}
+    .cetak-ttd{
+      display:flex;justify-content:flex-end;margin-top:28px;font-size:11px;
+    }
+    .cetak-ttd .blok{text-align:center;width:180px}
+    .cetak-ttd .garis-ttd{margin-top:55px;border-top:1px solid #000;padding-top:4px;font-weight:700}
+  }
+
+  @media (min-width:700px){
+    body{font-size:15.5px}
+    .kartu-body{grid-template-columns:1fr 1fr;align-items:start}
+    .kartu-body .rincian{grid-column:1 / -1}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>Hitung Gaji Karyawan</h1>
+    <div class="sub">Isi data, total langsung kehitung. Data tersimpan otomatis di HP/laptop ini.</div>
+    <div class="header-row">
+      <input type="text" id="namaToko" placeholder="Nama toko/usaha" value="Kenjustin Jaya Store">
+      <input type="month" id="periode" style="max-width:150px">
+    </div>
+  </div>
+</header>
+
+<main>
+  <details class="pengaturan">
+    <summary>Pengaturan potongan</summary>
+    <div class="pengaturan-body">
+      <div class="baris-2">
+        <div class="field">
+          <label>Jatah off gratis (hari/bulan)</label>
+          <div class="stepper">
+            <button type="button" onclick="ubahSetting('jatahOff',-1)">−</button>
+            <input type="text" inputmode="numeric" id="jatahOff" value="4" onchange="simpanDanHitung()">
+            <button type="button" onclick="ubahSetting('jatahOff',1)">+</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Potongan per hari off lebih</label>
+          <div class="uang-wrap">
+            <span class="rp">Rp</span>
+            <input type="text" inputmode="numeric" id="potonganPerOff" value="100.000" oninput="formatUangInput(this)" onchange="simpanDanHitung()">
+          </div>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <div class="keterangan">
+          Kerajinan hangus jika off melebihi jatah
+          <small>Kalau aktif: uang kerajinan otomatis Rp 0 jika hari off melewati jatah gratis</small>
+        </div>
+        <label class="saklar">
+          <input type="checkbox" id="kerajinanHangus" checked onchange="simpanDanHitung()">
+          <span></span>
+        </label>
+      </div>
+      <div class="backup-blok">
+        <div class="backup-judul">Cadangkan &amp; pulihkan data</div>
+        <div class="backup-tombol-baris">
+          <button type="button" class="tombol-backup" onclick="eksporJSON()">⬇️ Ekspor (.json)</button>
+          <button type="button" class="tombol-backup" onclick="document.getElementById('inputImpor').click()">⬆️ Impor (.json)</button>
+        </div>
+        <input type="file" id="inputImpor" accept="application/json,.json" style="display:none" onchange="imporJSON(event)">
+        <div class="backup-ket">Simpan file .json ini ke WA/Google Drive tiap habis gajian, biar data aman kalau HP-nya kenapa-napa atau mau pindah device.</div>
+      </div>
+    </div>
+  </details>
+
+  <div id="daftarKaryawan"></div>
+
+  <button class="tombol-tambah" onclick="tambahKaryawan()">+ Tambah Karyawan</button>
+</main>
+
+<div class="bar-total">
+  <div class="bar-inner">
+    <div class="bar-info">
+      <div class="label">Total gajian · <span id="jumlahOrang">0</span> orang</div>
+      <div class="nilai angka" id="totalSemua">Rp 0</div>
+    </div>
+    <button class="tombol-cetak" onclick="window.print()">🖨️ Cetak PDF</button>
+  </div>
+</div>
+
+<!-- ===== TAMPILAN CETAK A4 ===== -->
+<div class="halaman-cetak" id="halamanCetak"></div>
+
+<script>
+const KUNCI = 'hitungGaji_v1';
+const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+let data = {
+  karyawan: [
+    { nama:'Contoh: Budi', gajiPokok:2500000, kerajinan:300000, offDay:2,
+      kasbon:[ {tanggal:'2026-08-05', jumlah:200000} ] }
+  ]
+};
+
+/* ---------- util uang ---------- */
+function keAngka(str){
+  return parseInt(String(str).replace(/[^\d]/g,''),10) || 0;
+}
+function keRupiah(n){
+  const neg = n < 0;
+  const s = Math.abs(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  return (neg?'-Rp ':'Rp ') + s;
+}
+function titikRibuan(n){
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+}
+function formatUangInput(el){
+  const angka = keAngka(el.value);
+  el.value = angka ? titikRibuan(angka) : '';
+}
+function tglPendek(iso){
+  if(!iso) return '—';
+  const p = iso.split('-'); // yyyy-mm-dd
+  return parseInt(p[2],10) + ' ' + (BULAN[parseInt(p[1],10)-1]||'').slice(0,3);
+}
+function tglHariIni(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+/* ---------- simpan / muat ---------- */
+function migrasiData(d){
+  if(!d.karyawan) d.karyawan = [];
+  // migrasi: dulu kasbon berupa angka tunggal, sekarang daftar per tanggal
+  d.karyawan.forEach(k=>{
+    if(!Array.isArray(k.kasbon)){
+      k.kasbon = (k.kasbon>0) ? [{tanggal:'', jumlah:k.kasbon}] : [];
+    }
+    k.gajiPokok = k.gajiPokok||0;
+    k.kerajinan = k.kerajinan||0;
+    k.offDay = k.offDay||0;
+  });
+  return d;
+}
+function simpan(){
+  data.namaToko = document.getElementById('namaToko').value;
+  data.periode = document.getElementById('periode').value;
+  data.jatahOff = keAngka(document.getElementById('jatahOff').value);
+  data.potonganPerOff = keAngka(document.getElementById('potonganPerOff').value);
+  data.kerajinanHangus = document.getElementById('kerajinanHangus').checked;
+  try{ localStorage.setItem(KUNCI, JSON.stringify(data)); }catch(e){}
+}
+function muat(){
+  try{
+    const t = localStorage.getItem(KUNCI);
+    if(t) data = JSON.parse(t);
+  }catch(e){}
+  data = migrasiData(data);
+  document.getElementById('namaToko').value = data.namaToko ?? 'Kenjustin Jaya Store';
+  const skrg = new Date();
+  document.getElementById('periode').value = data.periode || (skrg.getFullYear()+'-'+String(skrg.getMonth()+1).padStart(2,'0'));
+  document.getElementById('jatahOff').value = data.jatahOff ?? 4;
+  document.getElementById('potonganPerOff').value = titikRibuan(data.potonganPerOff ?? 100000);
+  document.getElementById('kerajinanHangus').checked = data.kerajinanHangus !== false;
+}
+
+/* ---------- ekspor / impor JSON (backup) ---------- */
+function namaFileAman(s){
+  return String(s||'gaji').toLowerCase().trim()
+    .replace(/[^a-z0-9]+/g,'-').replace(/(^-+|-+$)/g,'') || 'gaji';
+}
+function eksporJSON(){
+  simpan();
+  const isi = {
+    versi: 1,
+    diekspor: new Date().toISOString(),
+    namaToko: data.namaToko,
+    periode: data.periode,
+    jatahOff: data.jatahOff,
+    potonganPerOff: data.potonganPerOff,
+    kerajinanHangus: data.kerajinanHangus,
+    karyawan: data.karyawan
+  };
+  const blob = new Blob([JSON.stringify(isi, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const namaFile = 'gaji-' + namaFileAman(data.namaToko) + '-' + (data.periode||'tanpa-periode') + '.json';
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = namaFile;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+}
+function imporJSON(event){
+  const file = event.target.files && event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    let baru;
+    try{ baru = JSON.parse(e.target.result); }
+    catch(err){
+      alert('File tidak bisa dibaca. Pastikan ini file .json hasil Ekspor dari aplikasi ini.');
+      event.target.value = '';
+      return;
+    }
+    if(!baru || typeof baru !== 'object' || !Array.isArray(baru.karyawan)){
+      alert('File ini bukan file backup gaji yang valid.');
+      event.target.value = '';
+      return;
+    }
+    const ok = confirm(
+      'Impor data ini?\n\n' +
+      'Toko: ' + (baru.namaToko || '-') + '\n' +
+      'Periode: ' + (baru.periode || '-') + '\n' +
+      'Jumlah karyawan: ' + baru.karyawan.length + '\n\n' +
+      'Data yang sedang aktif di HP/laptop ini akan DIGANTI dan tidak bisa dikembalikan.'
+    );
+    if(!ok){ event.target.value = ''; return; }
+
+    data = migrasiData({
+      namaToko: baru.namaToko || 'Toko Saya',
+      periode: baru.periode || '',
+      jatahOff: baru.jatahOff ?? 4,
+      potonganPerOff: baru.potonganPerOff ?? 100000,
+      kerajinanHangus: baru.kerajinanHangus !== false,
+      karyawan: baru.karyawan
+    });
+
+    document.getElementById('namaToko').value = data.namaToko;
+    document.getElementById('periode').value = data.periode;
+    document.getElementById('jatahOff').value = data.jatahOff;
+    document.getElementById('potonganPerOff').value = titikRibuan(data.potonganPerOff);
+    document.getElementById('kerajinanHangus').checked = data.kerajinanHangus;
+
+    simpanDanHitung();
+    event.target.value = '';
+    alert('Data berhasil dipulihkan dari backup.');
+  };
+  reader.readAsText(file);
+}
+
+/* ---------- hitung ---------- */
+function hitungSatu(k){
+  const jatah = keAngka(document.getElementById('jatahOff').value);
+  const tarif = keAngka(document.getElementById('potonganPerOff').value);
+  const hangusAktif = document.getElementById('kerajinanHangus').checked;
+
+  const offLebih = Math.max(0, (k.offDay||0) - jatah);
+  const potonganOff = offLebih * tarif;
+  const kerajinanHangus = hangusAktif && offLebih > 0;
+  const kerajinanDapat = kerajinanHangus ? 0 : (k.kerajinan||0);
+  const kasbonTotal = (Array.isArray(k.kasbon)?k.kasbon:[]).reduce((a,b)=>a+(b.jumlah||0),0);
+  const total = (k.gajiPokok||0) + kerajinanDapat - potonganOff - kasbonTotal;
+  return { offLebih, potonganOff, kerajinanHangus, kerajinanDapat, kasbonTotal, total };
+}
+
+/* ---------- render daftar ---------- */
+function render(){
+  const wadah = document.getElementById('daftarKaryawan');
+  if(data.karyawan.length === 0){
+    wadah.innerHTML = '<div class="kosong">Belum ada karyawan.<br>Tekan tombol di bawah untuk menambah.</div>';
+  } else {
+    wadah.innerHTML = data.karyawan.map((k,i)=>{
+      const h = hitungSatu(k);
+      return `
+      <div class="kartu">
+        <div class="kartu-atas">
+          <div class="nomor">${i+1}</div>
+          <input class="nama" type="text" value="${escapeHtml(k.nama)}" placeholder="Nama karyawan"
+                 onchange="ubah(${i},'nama',this.value)">
+          <span class="ikon-edit">✎</span>
+          <button class="hapus" title="Hapus" onclick="hapusKaryawan(${i})">✕</button>
+        </div>
+        <div class="kartu-body">
+          <div class="field">
+            <label>Gaji pokok</label>
+            <div class="uang-wrap"><span class="rp">Rp</span>
+              <input type="text" inputmode="numeric" value="${k.gajiPokok?titikRibuan(k.gajiPokok):''}"
+                     oninput="formatUangInput(this)" onchange="ubah(${i},'gajiPokok',this.value)">
+            </div>
+          </div>
+          <div class="field">
+            <label>Uang kerajinan</label>
+            <div class="uang-wrap"><span class="rp">Rp</span>
+              <input type="text" inputmode="numeric" value="${k.kerajinan?titikRibuan(k.kerajinan):''}"
+                     oninput="formatUangInput(this)" onchange="ubah(${i},'kerajinan',this.value)">
+            </div>
+          </div>
+          <div class="field">
+            <label>Hari off</label>
+            <div class="stepper">
+              <button type="button" onclick="ubahOff(${i},-1)">−</button>
+              <input type="text" inputmode="numeric" value="${k.offDay||0}"
+                     onchange="ubah(${i},'offDay',this.value)">
+              <button type="button" onclick="ubahOff(${i},1)">+</button>
+            </div>
+          </div>
+          <div class="field" style="grid-column:1 / -1">
+            <label>Kasbon (per tanggal)</label>
+            <div class="kasbon-blok">
+              ${k.kasbon.length === 0 ? '<div class="kasbon-kosong">Belum ada kasbon bulan ini.</div>' :
+                k.kasbon.map((b,j)=>`
+                <div class="kasbon-baris">
+                  <input type="date" value="${b.tanggal||''}"
+                         onchange="ubahKasbon(${i},${j},'tanggal',this.value)">
+                  <div class="uang-wrap"><span class="rp">Rp</span>
+                    <input type="text" inputmode="numeric" value="${b.jumlah?titikRibuan(b.jumlah):''}"
+                           placeholder="0" oninput="formatUangInput(this)"
+                           onchange="ubahKasbon(${i},${j},'jumlah',this.value)">
+                  </div>
+                  <button class="hapus-kecil" title="Hapus kasbon" onclick="hapusKasbon(${i},${j})">✕</button>
+                </div>`).join('')}
+              <button class="kasbon-tambah" onclick="tambahKasbon(${i})">+ Tambah kasbon</button>
+              ${k.kasbon.length > 0 ? `<div class="kasbon-total angka"><span>Total kasbon</span><span>${keRupiah(h.kasbonTotal)}</span></div>` : ''}
+            </div>
+          </div>
+          <div class="rincian angka">
+            <div class="r"><span>Gaji pokok</span><span>${keRupiah(k.gajiPokok||0)}</span></div>
+            <div class="r">
+              <span>Kerajinan ${h.kerajinanHangus?'<span class="catatan-hangus">(hangus, off lebih '+h.offLebih+' hari)</span>':''}</span>
+              <span class="${h.kerajinanDapat>0?'plus':''}">+ ${keRupiah(h.kerajinanDapat)}</span>
+            </div>
+            <div class="r"><span>Potongan off (${h.offLebih} × ${keRupiah(keAngka(document.getElementById('potonganPerOff').value))})</span>
+              <span class="${h.potonganOff>0?'minus':''}">− ${keRupiah(h.potonganOff)}</span></div>
+            <div class="r"><span>Kasbon${k.kasbon.length?' ('+k.kasbon.length+'×)':''}</span>
+              <span class="${h.kasbonTotal>0?'minus':''}">− ${keRupiah(h.kasbonTotal)}</span></div>
+            <div class="r total"><span>Gaji diterima</span>
+              <span class="${h.total<0?'negatif':''}">${keRupiah(h.total)}</span></div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // total keseluruhan
+  let total = 0;
+  data.karyawan.forEach(k=>{ total += hitungSatu(k).total; });
+  document.getElementById('totalSemua').textContent = keRupiah(total);
+  document.getElementById('jumlahOrang').textContent = data.karyawan.length;
+
+  renderCetak();
+}
+
+function escapeHtml(s){
+  return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ---------- render halaman cetak ---------- */
+function renderCetak(){
+  const [th, bl] = (document.getElementById('periode').value || '2026-01').split('-');
+  const namaBulan = BULAN[parseInt(bl,10)-1] || '';
+  const toko = document.getElementById('namaToko').value || 'Daftar Gaji';
+
+  let totalPokok=0,totalKerajinan=0,totalPotOff=0,totalKasbon=0,totalAkhir=0;
+  const rincianKasbon = [];
+  const baris = data.karyawan.map((k,i)=>{
+    const h = hitungSatu(k);
+    totalPokok += k.gajiPokok||0;
+    totalKerajinan += h.kerajinanDapat;
+    totalPotOff += h.potonganOff;
+    totalKasbon += h.kasbonTotal;
+    totalAkhir += h.total;
+    if(k.kasbon.length){
+      rincianKasbon.push({
+        nama:k.nama,
+        isi:k.kasbon.map(b=>tglPendek(b.tanggal)+': Rp '+titikRibuan(b.jumlah||0)).join(' · '),
+        total:h.kasbonTotal
+      });
+    }
+    return `<tr>
+      <td class="tengah">${i+1}</td>
+      <td class="kiri">${escapeHtml(k.nama)}</td>
+      <td>${titikRibuan(k.gajiPokok||0)}</td>
+      <td>${titikRibuan(h.kerajinanDapat)}</td>
+      <td class="tengah">${k.offDay||0}</td>
+      <td>${titikRibuan(h.potonganOff)}</td>
+      <td>${titikRibuan(h.kasbonTotal)}</td>
+      <td><b>${h.total<0?'-':''}${titikRibuan(Math.abs(h.total))}</b></td>
+      <td class="ttd"></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('halamanCetak').innerHTML = `
+    <div class="cetak-kop">
+      <h2>${escapeHtml(toko)}</h2>
+      <div class="judul-doc">DAFTAR GAJI KARYAWAN</div>
+      <div class="periode">Periode: ${namaBulan} ${th}</div>
+    </div>
+    <table class="cetak">
+      <thead><tr>
+        <th style="width:24px">No</th><th>Nama</th><th>Gaji Pokok<br>(Rp)</th>
+        <th>Kerajinan<br>(Rp)</th><th style="width:32px">Off<br>(hari)</th>
+        <th>Pot. Off<br>(Rp)</th><th>Kasbon<br>(Rp)</th><th>Gaji Diterima<br>(Rp)</th>
+        <th>Tanda<br>Tangan</th>
+      </tr></thead>
+      <tbody>${baris}
+        <tr class="jumlah">
+          <td colspan="2" class="kiri">JUMLAH</td>
+          <td>${titikRibuan(totalPokok)}</td>
+          <td>${titikRibuan(totalKerajinan)}</td>
+          <td></td>
+          <td>${titikRibuan(totalPotOff)}</td>
+          <td>${titikRibuan(totalKasbon)}</td>
+          <td>${totalAkhir<0?'-':''}${titikRibuan(Math.abs(totalAkhir))}</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    ${rincianKasbon.length ? `
+    <div class="cetak-kasbon">
+      <div class="judul-kasbon">Rincian Kasbon</div>
+      <table class="cetak kasbon-detail">
+        <thead><tr><th class="kiri" style="text-align:left">Nama</th><th style="text-align:left">Tanggal &amp; Jumlah</th><th style="width:90px">Total (Rp)</th></tr></thead>
+        <tbody>
+          ${rincianKasbon.map(r=>`<tr>
+            <td class="kiri" style="width:130px">${escapeHtml(r.nama)}</td>
+            <td class="kiri">${escapeHtml(r.isi)}</td>
+            <td>${titikRibuan(r.total)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>` : ''}
+    <div class="cetak-ttd">
+      <div class="blok">
+        Palembang, ______________<br>Pemilik,
+        <div class="garis-ttd">( ______________________ )</div>
+      </div>
+    </div>`;
+}
+
+/* ---------- aksi ---------- */
+function ubah(i, kunci, nilai){
+  if(kunci === 'nama'){ data.karyawan[i].nama = nilai; }
+  else { data.karyawan[i][kunci] = keAngka(nilai); }
+  simpanDanHitung();
+}
+function ubahOff(i, delta){
+  data.karyawan[i].offDay = Math.max(0,(data.karyawan[i].offDay||0)+delta);
+  simpanDanHitung();
+}
+function ubahSetting(id, delta){
+  const el = document.getElementById(id);
+  el.value = Math.max(0, keAngka(el.value)+delta);
+  simpanDanHitung();
+}
+function tambahKasbon(i){
+  data.karyawan[i].kasbon.push({ tanggal: tglHariIni(), jumlah: 0 });
+  simpanDanHitung();
+}
+function ubahKasbon(i, j, kunci, nilai){
+  if(kunci === 'tanggal'){ data.karyawan[i].kasbon[j].tanggal = nilai; }
+  else { data.karyawan[i].kasbon[j].jumlah = keAngka(nilai); }
+  simpanDanHitung();
+}
+function hapusKasbon(i, j){
+  data.karyawan[i].kasbon.splice(j,1);
+  simpanDanHitung();
+}
+function tambahKaryawan(){
+  data.karyawan.push({ nama:'', gajiPokok:0, kerajinan:0, offDay:0, kasbon:[] });
+  simpanDanHitung();
+  // fokus ke nama karyawan baru
+  setTimeout(()=>{
+    const semua = document.querySelectorAll('.kartu-atas input.nama');
+    if(semua.length) semua[semua.length-1].focus();
+  },50);
+}
+function hapusKaryawan(i){
+  const nama = data.karyawan[i].nama || 'karyawan ini';
+  if(confirm('Hapus '+nama+'?')){
+    data.karyawan.splice(i,1);
+    simpanDanHitung();
+  }
+}
+function simpanDanHitung(){ simpan(); render(); }
+
+/* ---------- mulai ---------- */
+muat();
+render();
+document.getElementById('namaToko').addEventListener('change', simpanDanHitung);
+document.getElementById('periode').addEventListener('change', simpanDanHitung);
+</script>
+</body>
+</html>
