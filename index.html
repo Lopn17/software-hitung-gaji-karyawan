@@ -259,7 +259,7 @@
     <h1>Hitung Gaji Karyawan</h1>
     <div class="sub">Isi data, total langsung kehitung. Data tersimpan otomatis di HP/laptop ini.</div>
     <div class="header-row">
-      <input type="text" id="namaToko" placeholder="Nama toko/usaha" value="Kenjustin Jaya Store">
+      <input type="text" id="namaToko" placeholder="Nama toko/usaha" value="Justin Jaya Store">
       <input type="month" id="periode" style="max-width:150px">
     </div>
   </div>
@@ -391,7 +391,7 @@ function muat(){
     if(t) data = JSON.parse(t);
   }catch(e){}
   data = migrasiData(data);
-  document.getElementById('namaToko').value = data.namaToko ?? 'Kenjustin Jaya Store';
+  document.getElementById('namaToko').value = data.namaToko ?? 'Justin Jaya Store';
   const skrg = new Date();
   document.getElementById('periode').value = data.periode || (skrg.getFullYear()+'-'+String(skrg.getMonth()+1).padStart(2,'0'));
   document.getElementById('jatahOff').value = data.jatahOff ?? 4;
