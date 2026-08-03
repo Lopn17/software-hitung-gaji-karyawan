@@ -144,27 +144,73 @@
   }
   .stepper input:focus{outline:none}
 
-  /* kasbon per tanggal */
-  .kasbon-blok{border:1.5px solid var(--garis);border-radius:10px;padding:10px 12px;display:grid;gap:8px}
-  .kasbon-baris{display:flex;gap:8px;align-items:center}
-  .kasbon-baris input[type=date]{
+  /* ===== BLOK KASBON / UTANG ===== */
+  .utang-blok{border:1.5px solid var(--garis);border-radius:10px;padding:12px;display:grid;gap:10px}
+  .utang-atas{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+  .utang-label{font-size:11px;font-weight:600;color:var(--abu);text-transform:uppercase;letter-spacing:.05em}
+  .utang-nilai{font-size:19px;font-weight:800;letter-spacing:-.01em}
+  .utang-nilai.ada{color:var(--merah)}
+  .utang-nilai.lunas{color:var(--hijau)}
+  .utang-kanan{text-align:right;font-size:12.5px;font-weight:700}
+  .utang-kanan .kecil{font-weight:600;color:var(--abu);font-size:12px}
+  .bar-progres{height:7px;border-radius:7px;background:#E8E6DE;overflow:hidden}
+  .bar-progres i{display:block;height:100%;background:var(--hijau);border-radius:7px}
+  .utang-catatan{font-size:11.5px;color:var(--abu);line-height:1.5}
+  .utang-catatan.warn{color:var(--amber);font-weight:600}
+
+  .potong-baris{display:grid;gap:6px}
+  .potong-baris > .judul{font-size:12.5px;font-weight:700}
+  .chip-baris{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{
+    border:1.5px solid var(--garis);background:var(--putih);border-radius:20px;
+    padding:6px 11px;font-family:inherit;font-size:12px;font-weight:700;
+    color:var(--hijau);cursor:pointer;
+  }
+  .chip:active{background:rgba(14,94,74,.08)}
+  .chip.netral{color:var(--abu)}
+
+  details.lipat{border-top:1px dashed var(--garis);padding-top:9px}
+  details.lipat summary{
+    list-style:none;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--hijau);
+    display:flex;justify-content:space-between;align-items:center;-webkit-user-select:none;user-select:none;
+  }
+  details.lipat summary::-webkit-details-marker{display:none}
+  details.lipat summary::after{content:"▾";transition:transform .2s;color:var(--abu)}
+  details.lipat[open] summary::after{transform:rotate(180deg)}
+  .lipat-isi{display:grid;gap:8px;padding-top:9px}
+
+  .baris-catat{display:grid;gap:6px;border-bottom:1px dashed var(--garis);padding-bottom:8px}
+  .baris-catat:last-of-type{border-bottom:none;padding-bottom:0}
+  .baris-catat .atas{display:flex;gap:8px;align-items:center}
+  .baris-catat input[type=date]{
     border:1px solid var(--garis);border-radius:8px;padding:8px 6px;
     font-family:inherit;font-size:13px;font-weight:600;width:128px;flex-shrink:0;
     background:var(--putih);color:var(--tinta);
   }
-  .kasbon-baris .uang-wrap{flex:1;min-width:0}
-  .kasbon-baris .uang-wrap input{padding:8px 10px 8px 36px;font-size:14.5px}
-  .kasbon-baris .uang-wrap .rp{left:10px;font-size:12px}
-  .kasbon-baris .hapus-kecil{
+  .baris-catat .uang-wrap{flex:1;min-width:0}
+  .baris-catat .uang-wrap input{padding:8px 10px 8px 36px;font-size:14.5px}
+  .baris-catat .uang-wrap .rp{left:10px;font-size:12px}
+  .baris-catat input.ket{
+    width:100%;border:1px solid var(--garis);border-radius:8px;padding:7px 10px;
+    font-family:inherit;font-size:12.5px;font-weight:500;background:var(--putih);
+  }
+  .hapus-kecil{
     background:none;border:none;color:var(--abu);font-size:16px;cursor:pointer;
     padding:4px;line-height:1;flex-shrink:0;
   }
-  .kasbon-tambah{
+  .tambah-kecil{
     background:none;border:none;color:var(--hijau);font-family:inherit;
     font-size:13px;font-weight:700;cursor:pointer;text-align:left;padding:2px 0;
   }
-  .kasbon-kosong{font-size:12.5px;color:var(--abu)}
-  .kasbon-total{
+  .kosong-kecil{font-size:12.5px;color:var(--abu)}
+  .riwayat-baris{
+    display:flex;justify-content:space-between;align-items:center;gap:8px;
+    font-size:13px;padding:7px 0;border-bottom:1px dashed var(--garis);
+  }
+  .riwayat-baris:last-child{border-bottom:none}
+  .riwayat-baris .kiri{color:var(--abu);font-size:12.5px;font-weight:600}
+  .riwayat-baris .kanan{font-weight:700;display:flex;align-items:center;gap:4px}
+  .total-kecil{
     display:flex;justify-content:space-between;font-size:13px;font-weight:700;
     border-top:1px dashed var(--garis);padding-top:8px;
   }
@@ -183,15 +229,8 @@
     font-weight:800;font-size:15.5px;
   }
   .rincian .r.total .negatif{color:var(--merah)}
+  .rincian .sisa-note{font-size:11.5px;color:var(--abu);text-align:right;margin-top:-2px}
   .catatan-hangus{font-size:11.5px;color:var(--amber);font-weight:600}
-
-  /* ===== TOMBOL ===== */
-  .tombol-tambah{
-    width:100%;padding:14px;border:2px dashed var(--hijau);border-radius:var(--radius);
-    background:transparent;color:var(--hijau);font-family:inherit;font-size:15px;
-    font-weight:700;cursor:pointer;margin-bottom:14px;
-  }
-  .tombol-tambah:active{background:rgba(14,94,74,.08)}
 
   /* ===== BAR TOTAL BAWAH ===== */
   .bar-total{
@@ -210,39 +249,136 @@
   }
   .tombol-cetak:active{transform:scale(.97)}
 
+  /* ===== TOMBOL ===== */
+  .tombol-tambah{
+    width:100%;padding:14px;border:2px dashed var(--hijau);border-radius:var(--radius);
+    background:transparent;color:var(--hijau);font-family:inherit;font-size:15px;
+    font-weight:700;cursor:pointer;margin-bottom:14px;
+  }
+  .tombol-tambah:active{background:rgba(14,94,74,.08)}
+  .tombol-tutup{
+    width:100%;padding:13px;border:1.5px solid var(--amber);border-radius:var(--radius);
+    background:transparent;color:var(--amber);font-family:inherit;font-size:14px;
+    font-weight:700;cursor:pointer;
+  }
+  .tombol-tutup:active{background:rgba(180,83,9,.08)}
+  .tombol-batal{
+    width:100%;padding:11px;border:1.5px solid var(--garis);border-radius:var(--radius);
+    background:var(--putih);color:var(--abu);font-family:inherit;font-size:13px;
+    font-weight:700;cursor:pointer;margin-top:8px;
+  }
+  .tutup-ket{font-size:11.5px;color:var(--abu);text-align:center;margin-top:8px;line-height:1.5}
+
   .kosong{
     text-align:center;color:var(--abu);padding:30px 16px;font-size:14px;
   }
 
-  /* ===== CETAK / PRINT A4 ===== */
+  /* ===== MODAL ===== */
+  .modal-lapis{
+    position:fixed;inset:0;z-index:100;background:rgba(9,63,49,.45);
+    display:flex;align-items:center;justify-content:center;padding:18px;
+    -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);
+    animation:lapisMasuk .15s ease-out;
+  }
+  .modal-lapis[hidden]{display:none}
+  @keyframes lapisMasuk{from{opacity:0}to{opacity:1}}
+  @keyframes kotakMasuk{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+  .modal-kotak{
+    background:var(--putih);border-radius:16px;width:100%;max-width:400px;
+    max-height:85vh;overflow-y:auto;box-shadow:0 18px 50px rgba(0,0,0,.28);
+    animation:kotakMasuk .18s cubic-bezier(.2,.8,.3,1);
+  }
+  .modal-atas{padding:18px 18px 0}
+  .modal-judul{font-size:17px;font-weight:800;letter-spacing:-.01em;display:flex;gap:8px;align-items:flex-start}
+  .modal-isi{font-size:13.5px;color:var(--abu);line-height:1.6;margin-top:7px}
+  .modal-isi b{color:var(--tinta)}
+  .modal-isi .catat{
+    background:var(--kertas);border-radius:10px;padding:10px 12px;margin-top:10px;
+    display:grid;gap:6px;font-size:13px;color:var(--tinta);
+  }
+  .modal-isi .catat .baris{display:flex;justify-content:space-between;gap:10px}
+  .modal-isi .catat .baris .sisa{color:var(--abu);font-size:11.5px}
+  .modal-isi ul{margin:8px 0 0 16px;display:grid;gap:4px}
+  .modal-isi .tegas{color:var(--amber);font-weight:600}
+  .modal-form{padding:14px 18px 0;display:grid;gap:12px}
+  .modal-form label{display:block;font-size:12.5px;font-weight:600;color:var(--abu);margin-bottom:5px}
+  .modal-form input{
+    width:100%;border:1.5px solid var(--garis);border-radius:10px;
+    padding:11px 12px;font-family:inherit;font-size:16px;font-weight:700;
+    background:var(--putih);color:var(--tinta);
+  }
+  .modal-form input:focus{outline:2px solid var(--hijau);border-color:var(--hijau)}
+  .modal-form .uang-wrap input{padding-left:40px;text-align:right}
+  .modal-tombol{display:flex;gap:10px;padding:16px 18px 18px}
+  .modal-tombol button{
+    flex:1;border-radius:11px;padding:12px 10px;font-family:inherit;
+    font-size:14px;font-weight:700;cursor:pointer;border:1.5px solid var(--garis);
+    background:var(--putih);color:var(--abu);
+  }
+  .modal-tombol button.utama{background:var(--hijau);border-color:var(--hijau);color:#fff}
+  .modal-tombol button.bahaya{background:var(--merah);border-color:var(--merah);color:#fff}
+  .modal-tombol button:active{transform:scale(.98)}
+
+  /* ===== TOAST ===== */
+  .toast-wadah{
+    position:fixed;left:0;right:0;bottom:calc(84px + env(safe-area-inset-bottom));
+    z-index:90;display:grid;gap:8px;padding:0 16px;pointer-events:none;
+  }
+  .toast{
+    max-width:420px;margin:0 auto;width:100%;
+    background:var(--tinta);color:#fff;border-radius:12px;padding:12px 14px;
+    font-size:13.5px;font-weight:600;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.25);
+    animation:toastMasuk .2s ease-out;
+  }
+  .toast.pergi{animation:toastKeluar .25s ease-in forwards}
+  .toast.sukses{background:var(--hijau)}
+  @keyframes toastMasuk{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  @keyframes toastKeluar{to{opacity:0;transform:translateY(8px)}}
+
+  /* ===== CETAK / PRINT A4 MENDATAR (LANDSCAPE) ===== */
   .halaman-cetak{display:none}
   @media print{
-    @page{size:A4 portrait;margin:14mm 12mm}
-    body{background:#fff;padding:0;font-size:11px}
+    @page{size:A4 landscape;margin:9mm}
+    body{background:#fff;padding:0;font-size:13px}
     header,main,.bar-total{display:none !important}
     .halaman-cetak{display:block;color:#000}
-    .cetak-kop{text-align:center;border-bottom:2.5px solid #000;padding-bottom:8px;margin-bottom:4px}
-    .cetak-kop h2{font-size:16px;font-weight:800;letter-spacing:.02em;text-transform:uppercase}
-    .cetak-kop .periode{font-size:12px;margin-top:3px}
-    .cetak-kop .judul-doc{font-size:11px;color:#333;margin-top:1px}
-    table.cetak{width:100%;border-collapse:collapse;margin-top:10px}
+
+    .cetak-kop{text-align:center;border-bottom:3px solid #000;padding-bottom:9px;margin-bottom:6px}
+    .cetak-kop h2{font-size:23px;font-weight:800;letter-spacing:.02em;text-transform:uppercase;line-height:1.15}
+    .cetak-kop .judul-doc{font-size:14px;color:#000;margin-top:3px;font-weight:600;letter-spacing:.06em}
+    .cetak-kop .periode{font-size:15px;margin-top:3px;font-weight:700}
+
+    table.cetak{width:100%;border-collapse:collapse;margin-top:9px;table-layout:fixed}
     table.cetak th,table.cetak td{
-      border:1px solid #000;padding:5px 6px;text-align:right;
-      font-variant-numeric:tabular-nums;
+      border:1px solid #000;padding:10px 6px;text-align:right;
+      font-variant-numeric:tabular-nums;font-size:15.5px;line-height:1.25;
+      word-wrap:break-word;overflow-wrap:break-word;
     }
-    table.cetak th{background:#EFEFEF;font-size:10px;text-align:center;font-weight:700}
-    table.cetak td.kiri{text-align:left}
+    table.cetak th{
+      background:#E4E4E0;font-size:13px;text-align:center;font-weight:800;
+      line-height:1.3;padding:8px 4px;
+    }
+    table.cetak td.kiri{text-align:left;font-weight:700}
     table.cetak td.tengah{text-align:center}
-    table.cetak td.ttd{height:34px;width:70px}
-    table.cetak tr.jumlah td{font-weight:800;background:#F7F7F7}
-    .cetak-kasbon{margin-top:16px}
-    .cetak-kasbon .judul-kasbon{font-size:11px;font-weight:800;margin-bottom:4px;text-transform:uppercase;letter-spacing:.03em}
-    table.kasbon-detail th,table.kasbon-detail td{font-size:10px;padding:4px 6px}
+    table.cetak td.terima{font-size:17.5px;font-weight:800}
+    table.cetak tbody tr:nth-child(even) td{background:#F6F6F3}
+    table.cetak tr.jumlah td{font-weight:800;background:#DCDCD6;font-size:14px;padding:9px 4px}
+    table.cetak tr.jumlah td.terima{font-size:15.5px}
+    /* kepala tabel ikut tercetak lagi di halaman kedua */
+    table.cetak thead{display:table-header-group}
+    table.cetak tr{page-break-inside:avoid}
+
+    .cetak-kasbon{margin-top:12px;page-break-inside:avoid}
+    .cetak-kasbon .judul-kasbon{font-size:15px;font-weight:800;margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em}
+    table.kasbon-detail th{font-size:12.5px}
+    table.kasbon-detail td{font-size:15px;padding:7px 8px}
+
     .cetak-ttd{
-      display:flex;justify-content:flex-end;margin-top:28px;font-size:11px;
+      display:flex;justify-content:flex-end;margin-top:14px;font-size:13px;page-break-inside:avoid;
     }
-    .cetak-ttd .blok{text-align:center;width:180px}
-    .cetak-ttd .garis-ttd{margin-top:55px;border-top:1px solid #000;padding-top:4px;font-weight:700}
+    .cetak-ttd .blok{text-align:center;width:230px}
+    .cetak-ttd .garis-ttd{margin-top:38px;border-top:1.5px solid #000;padding-top:5px;font-weight:700}
+    .modal-lapis,.toast-wadah{display:none !important}
   }
 
   @media (min-width:700px){
@@ -303,7 +439,7 @@
           <button type="button" class="tombol-backup" onclick="document.getElementById('inputImpor').click()">⬆️ Impor (.json)</button>
         </div>
         <input type="file" id="inputImpor" accept="application/json,.json" style="display:none" onchange="imporJSON(event)">
-        <div class="backup-ket">Simpan file .json ini ke WA/Google Drive tiap habis gajian, biar data aman kalau HP-nya kenapa-napa atau mau pindah device.</div>
+        <div class="backup-ket">Simpan file .json ini ke WA/Google Drive tiap habis gajian, biar data aman kalau HP-nya kenapa-napa atau mau pindah device. Riwayat utang kasbon ikut kesimpan.</div>
       </div>
     </div>
   </details>
@@ -311,6 +447,10 @@
   <div id="daftarKaryawan"></div>
 
   <button class="tombol-tambah" onclick="tambahKaryawan()">+ Tambah Karyawan</button>
+
+  <button class="tombol-tutup" onclick="tutupBulan()">✅ Selesai gajian — catat potongan &amp; ganti bulan</button>
+  <div id="areaBatal"></div>
+  <div class="tutup-ket">Tekan ini setelah gaji dibayar. Potongan kasbon bulan ini masuk ke riwayat, sisa utang berkurang, lalu pindah ke bulan berikutnya.</div>
 </main>
 
 <div class="bar-total">
@@ -326,16 +466,38 @@
 <!-- ===== TAMPILAN CETAK A4 ===== -->
 <div class="halaman-cetak" id="halamanCetak"></div>
 
+<!-- ===== MODAL ===== -->
+<div class="modal-lapis" id="modalLapis" hidden>
+  <div class="modal-kotak" role="dialog" aria-modal="true" aria-labelledby="modalJudul">
+    <div class="modal-atas">
+      <div class="modal-judul" id="modalJudul"></div>
+      <div class="modal-isi" id="modalIsi"></div>
+    </div>
+    <div class="modal-form" id="modalForm"></div>
+    <div class="modal-tombol">
+      <button type="button" id="modalBatal">Batal</button>
+      <button type="button" id="modalOk" class="utama">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wadah" id="toastWadah"></div>
+
 <script>
 const KUNCI = 'hitungGaji_v1';
 const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
 let data = {
   karyawan: [
-    { nama:'Contoh: Budi', gajiPokok:2500000, kerajinan:300000, offDay:2,
-      kasbon:[ {tanggal:'2026-08-05', jumlah:200000} ] }
+    { nama:'Contoh: Budi', gajiPokok:2500000, kerajinan:300000, lembur:0, insentif:0, offDay:2,
+      utang:[ {tanggal:'2026-08-05', jumlah:200000, ket:'Kasbon'} ], cicilan:[],
+      potongKasbon:200000, cicilanRutin:0 }
   ]
 };
+
+/* state buka/tutup panel (biar nggak nutup sendiri tiap render) */
+let buka = {};
+function toggleBuka(key, isOpen){ if(isOpen) buka[key]=true; else delete buka[key]; }
 
 /* ---------- util uang ---------- */
 function keAngka(str){
@@ -362,18 +524,144 @@ function tglHariIni(){
   const d = new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
+function labelPeriode(p){
+  if(!p) return '—';
+  const [th,bl] = p.split('-');
+  return (BULAN[parseInt(bl,10)-1]||'') + ' ' + th;
+}
+function periodeGeser(p, maju){
+  const [th,bl] = (p||'').split('-').map(x=>parseInt(x,10));
+  if(!th || !bl) return p;
+  let b = bl + maju, t = th;
+  while(b > 12){ b -= 12; t++; }
+  while(b < 1){ b += 12; t--; }
+  return t + '-' + String(b).padStart(2,'0');
+}
+
+/* ---------- modal & toast ---------- */
+let modalSelesai = null;   // fungsi resolve promise yang lagi jalan
+
+function tutupModal(hasil){
+  const lapis = document.getElementById('modalLapis');
+  if(lapis.hidden) return;
+  lapis.hidden = true;
+  document.body.style.overflow = '';
+  const selesai = modalSelesai;
+  modalSelesai = null;
+  if(selesai) selesai(hasil);
+}
+
+/*  opsi: { judul, ikon, isi (html), fields:[{nama,label,tipe:'uang'|'month'|'text',nilai,placeholder}],
+            ok, batal (null = sembunyikan), bahaya } → Promise (null kalau batal) */
+function bukaModal(opsi){
+  return new Promise(resolve=>{
+    tutupModal(null);   // kalau ada modal lain, tutup dulu
+    modalSelesai = resolve;
+
+    const lapis = document.getElementById('modalLapis');
+    document.getElementById('modalJudul').innerHTML =
+      (opsi.ikon?`<span>${opsi.ikon}</span>`:'') + '<span>' + escapeHtml(opsi.judul||'') + '</span>';
+    document.getElementById('modalIsi').innerHTML = opsi.isi || '';
+
+    const wadahForm = document.getElementById('modalForm');
+    const fields = opsi.fields || [];
+    wadahForm.innerHTML = fields.map((f,n)=>{
+      if(f.tipe === 'uang'){
+        return `<div><label>${escapeHtml(f.label)}</label>
+          <div class="uang-wrap"><span class="rp">Rp</span>
+            <input type="text" inputmode="numeric" data-n="${n}" placeholder="${escapeHtml(f.placeholder||'0')}"
+                   value="${f.nilai?titikRibuan(keAngka(f.nilai)):''}" oninput="formatUangInput(this)"></div></div>`;
+      }
+      const tipe = f.tipe === 'month' ? 'month' : 'text';
+      return `<div><label>${escapeHtml(f.label)}</label>
+        <input type="${tipe}" data-n="${n}" placeholder="${escapeHtml(f.placeholder||'')}"
+               value="${escapeHtml(f.nilai||'')}"></div>`;
+    }).join('');
+
+    const tBatal = document.getElementById('modalBatal');
+    const tOk = document.getElementById('modalOk');
+    tBatal.textContent = opsi.batal || 'Batal';
+    tBatal.style.display = opsi.batal === null ? 'none' : '';
+    tOk.textContent = opsi.ok || 'OK';
+    tOk.className = opsi.bahaya ? 'bahaya' : 'utama';
+
+    lapis.hidden = false;
+    document.body.style.overflow = 'hidden';
+    lapis.querySelector('.modal-kotak').scrollTop = 0;
+
+    setTimeout(()=>{
+      const isian = wadahForm.querySelector('input');
+      if(isian){ isian.focus(); isian.select && isian.select(); }
+      else tOk.focus();
+    }, 30);
+  });
+}
+
+function modalOk(){
+  const fields = Array.from(document.querySelectorAll('#modalForm input'));
+  if(fields.length === 0) return tutupModal(true);
+  const hasil = {};
+  fields.forEach(el=>{ hasil[el.dataset.n] = el.value; });
+  tutupModal(hasil);
+}
+
+/* pembantu biar enak dipakai */
+function modalInfo(judul, isi, ikon){
+  return bukaModal({ judul, isi, ikon, batal:null, ok:'Mengerti' });
+}
+function modalTanya(opsi){
+  return bukaModal(opsi).then(h=> h === true);
+}
+function modalIsian(opsi){
+  return bukaModal(opsi).then(h=>{
+    if(!h || h === true) return null;
+    const keluar = {};
+    (opsi.fields||[]).forEach((f,n)=>{ keluar[f.nama] = h[n] ?? ''; });
+    return keluar;
+  });
+}
+
+function toast(pesan, sukses){
+  const wadah = document.getElementById('toastWadah');
+  const el = document.createElement('div');
+  el.className = 'toast' + (sukses ? ' sukses' : '');
+  el.textContent = pesan;
+  wadah.appendChild(el);
+  setTimeout(()=>{
+    el.classList.add('pergi');
+    setTimeout(()=>el.remove(), 300);
+  }, sukses ? 3200 : 4200);
+}
 
 /* ---------- simpan / muat ---------- */
+let urutId = 1;
+function idBaru(){ return 'k' + (Date.now().toString(36)) + (urutId++); }
+
 function migrasiData(d){
   if(!d.karyawan) d.karyawan = [];
-  // migrasi: dulu kasbon berupa angka tunggal, sekarang daftar per tanggal
   d.karyawan.forEach(k=>{
-    if(!Array.isArray(k.kasbon)){
-      k.kasbon = (k.kasbon>0) ? [{tanggal:'', jumlah:k.kasbon}] : [];
+    if(!k.id) k.id = idBaru();
+
+    // v1: kasbon = angka tunggal | v2: kasbon = daftar per tanggal
+    // v3: utang (daftar) + cicilan (riwayat potongan) + potongKasbon (bulan ini)
+    if(!Array.isArray(k.utang)){
+      let lama = [];
+      if(Array.isArray(k.kasbon)) lama = k.kasbon;
+      else if(k.kasbon > 0) lama = [{tanggal:'', jumlah:k.kasbon}];
+      k.utang = lama.map(b=>({ tanggal:b.tanggal||'', jumlah:b.jumlah||0, ket:b.ket||'' }));
+      // dulu kasbon langsung dipotong habis bulan itu → biar angka gaji nggak berubah
+      if(k.potongKasbon == null) k.potongKasbon = k.utang.reduce((a,b)=>a+b.jumlah,0);
     }
-    k.gajiPokok = k.gajiPokok||0;
-    k.kerajinan = k.kerajinan||0;
-    k.offDay = k.offDay||0;
+    if(!Array.isArray(k.cicilan)) k.cicilan = [];
+    delete k.kasbon;
+
+    k.gajiPokok    = k.gajiPokok||0;
+    k.kerajinan    = k.kerajinan||0;
+    k.lembur       = k.lembur||0;
+    k.insentif     = k.insentif||0;
+    k.offDay       = k.offDay||0;
+    k.potongKasbon = k.potongKasbon||0;
+    k.cicilanRutin = k.cicilanRutin||0;
   });
   return d;
 }
@@ -407,7 +695,7 @@ function namaFileAman(s){
 function eksporJSON(){
   simpan();
   const isi = {
-    versi: 1,
+    versi: 3,
     diekspor: new Date().toISOString(),
     namaToko: data.namaToko,
     periode: data.periode,
@@ -431,26 +719,27 @@ function imporJSON(event){
   const file = event.target.files && event.target.files[0];
   if(!file) return;
   const reader = new FileReader();
-  reader.onload = function(e){
+  reader.onload = async function(e){
     let baru;
     try{ baru = JSON.parse(e.target.result); }
     catch(err){
-      alert('File tidak bisa dibaca. Pastikan ini file .json hasil Ekspor dari aplikasi ini.');
       event.target.value = '';
-      return;
+      return modalInfo('File tidak bisa dibaca', 'Pastikan yang dipilih file <b>.json</b> hasil tombol Ekspor dari aplikasi ini.', '⚠️');
     }
     if(!baru || typeof baru !== 'object' || !Array.isArray(baru.karyawan)){
-      alert('File ini bukan file backup gaji yang valid.');
       event.target.value = '';
-      return;
+      return modalInfo('Bukan file backup gaji', 'Isi file ini nggak cocok sama format backup aplikasi ini.', '⚠️');
     }
-    const ok = confirm(
-      'Impor data ini?\n\n' +
-      'Toko: ' + (baru.namaToko || '-') + '\n' +
-      'Periode: ' + (baru.periode || '-') + '\n' +
-      'Jumlah karyawan: ' + baru.karyawan.length + '\n\n' +
-      'Data yang sedang aktif di HP/laptop ini akan DIGANTI dan tidak bisa dikembalikan.'
-    );
+    const ok = await modalTanya({
+      judul:'Impor data ini?', ikon:'⬆️',
+      isi:`<div class="catat">
+             <div class="baris"><span>Toko</span><b>${escapeHtml(baru.namaToko||'-')}</b></div>
+             <div class="baris"><span>Periode</span><b>${escapeHtml(labelPeriode(baru.periode))}</b></div>
+             <div class="baris"><span>Jumlah karyawan</span><b>${baru.karyawan.length} orang</b></div>
+           </div>
+           <div class="tegas" style="margin-top:10px">⚠️ Data yang sekarang ada di HP/laptop ini akan diganti dan tidak bisa dikembalikan.</div>`,
+      ok:'Ya, impor', batal:'Batal', bahaya:true
+    });
     if(!ok){ event.target.value = ''; return; }
 
     data = migrasiData({
@@ -470,7 +759,7 @@ function imporJSON(event){
 
     simpanDanHitung();
     event.target.value = '';
-    alert('Data berhasil dipulihkan dari backup.');
+    toast('Data berhasil dipulihkan dari backup.', true);
   };
   reader.readAsText(file);
 }
@@ -485,9 +774,20 @@ function hitungSatu(k){
   const potonganOff = offLebih * tarif;
   const kerajinanHangus = hangusAktif && offLebih > 0;
   const kerajinanDapat = kerajinanHangus ? 0 : (k.kerajinan||0);
-  const kasbonTotal = (Array.isArray(k.kasbon)?k.kasbon:[]).reduce((a,b)=>a+(b.jumlah||0),0);
-  const total = (k.gajiPokok||0) + kerajinanDapat - potonganOff - kasbonTotal;
-  return { offLebih, potonganOff, kerajinanHangus, kerajinanDapat, kasbonTotal, total };
+
+  const totalUtang   = (Array.isArray(k.utang)?k.utang:[]).reduce((a,b)=>a+(b.jumlah||0),0);
+  const sudahDibayar = (Array.isArray(k.cicilan)?k.cicilan:[]).reduce((a,b)=>a+(b.jumlah||0),0);
+  const sisaSebelum  = Math.max(0, totalUtang - sudahDibayar);
+  const potongKasbon = Math.min(k.potongKasbon||0, sisaSebelum);   // nggak boleh lebih dari sisa utang
+  const sisaSesudah  = sisaSebelum - potongKasbon;
+
+  const pemasukan = (k.gajiPokok||0) + kerajinanDapat + (k.lembur||0) + (k.insentif||0);
+  const sebelumKasbon = pemasukan - potonganOff;
+  const total = sebelumKasbon - potongKasbon;
+
+  return { offLebih, potonganOff, kerajinanHangus, kerajinanDapat,
+           totalUtang, sudahDibayar, sisaSebelum, potongKasbon, sisaSesudah,
+           pemasukan, sebelumKasbon, total };
 }
 
 /* ---------- render daftar ---------- */
@@ -498,6 +798,23 @@ function render(){
   } else {
     wadah.innerHTML = data.karyawan.map((k,i)=>{
       const h = hitungSatu(k);
+      const persen = h.totalUtang > 0 ? Math.round(h.sudahDibayar / h.totalUtang * 100) : 0;
+      const kU = k.id + '-utang', kR = k.id + '-riwayat';
+
+      // perkiraan lunas
+      let perkiraan = '';
+      if(h.sisaSesudah > 0){
+        const cicil = k.cicilanRutin || h.potongKasbon;
+        if(cicil > 0){
+          const bulan = Math.ceil(h.sisaSesudah / cicil);
+          perkiraan = `Kalau dipotong ${keRupiah(cicil)} tiap bulan, lunas kira-kira ${bulan} bulan lagi (${labelPeriode(periodeGeser(document.getElementById('periode').value, bulan))}).`;
+        }
+      } else if(h.totalUtang > 0){
+        perkiraan = 'Utang lunas setelah gajian bulan ini. 🎉';
+      }
+
+      const lebihGaji = h.potongKasbon > h.sebelumKasbon && h.potongKasbon > 0;
+
       return `
       <div class="kartu">
         <div class="kartu-atas">
@@ -523,6 +840,20 @@ function render(){
             </div>
           </div>
           <div class="field">
+            <label>Uang lembur</label>
+            <div class="uang-wrap"><span class="rp">Rp</span>
+              <input type="text" inputmode="numeric" value="${k.lembur?titikRibuan(k.lembur):''}"
+                     placeholder="0" oninput="formatUangInput(this)" onchange="ubah(${i},'lembur',this.value)">
+            </div>
+          </div>
+          <div class="field">
+            <label>Insentif / bonus</label>
+            <div class="uang-wrap"><span class="rp">Rp</span>
+              <input type="text" inputmode="numeric" value="${k.insentif?titikRibuan(k.insentif):''}"
+                     placeholder="0" oninput="formatUangInput(this)" onchange="ubah(${i},'insentif',this.value)">
+            </div>
+          </div>
+          <div class="field">
             <label>Hari off</label>
             <div class="stepper">
               <button type="button" onclick="ubahOff(${i},-1)">−</button>
@@ -531,37 +862,106 @@ function render(){
               <button type="button" onclick="ubahOff(${i},1)">+</button>
             </div>
           </div>
+
           <div class="field" style="grid-column:1 / -1">
-            <label>Kasbon (per tanggal)</label>
-            <div class="kasbon-blok">
-              ${k.kasbon.length === 0 ? '<div class="kasbon-kosong">Belum ada kasbon bulan ini.</div>' :
-                k.kasbon.map((b,j)=>`
-                <div class="kasbon-baris">
-                  <input type="date" value="${b.tanggal||''}"
-                         onchange="ubahKasbon(${i},${j},'tanggal',this.value)">
-                  <div class="uang-wrap"><span class="rp">Rp</span>
-                    <input type="text" inputmode="numeric" value="${b.jumlah?titikRibuan(b.jumlah):''}"
-                           placeholder="0" oninput="formatUangInput(this)"
-                           onchange="ubahKasbon(${i},${j},'jumlah',this.value)">
-                  </div>
-                  <button class="hapus-kecil" title="Hapus kasbon" onclick="hapusKasbon(${i},${j})">✕</button>
-                </div>`).join('')}
-              <button class="kasbon-tambah" onclick="tambahKasbon(${i})">+ Tambah kasbon</button>
-              ${k.kasbon.length > 0 ? `<div class="kasbon-total angka"><span>Total kasbon</span><span>${keRupiah(h.kasbonTotal)}</span></div>` : ''}
+            <label>Kasbon / utang</label>
+            <div class="utang-blok">
+              <div class="utang-atas">
+                <div>
+                  <div class="utang-label">Sisa utang</div>
+                  <div class="utang-nilai angka ${h.sisaSebelum>0?'ada':'lunas'}">${h.totalUtang>0?keRupiah(h.sisaSebelum):'Tidak ada utang'}</div>
+                </div>
+                ${h.totalUtang>0?`<div class="utang-kanan">
+                  <div class="utang-label">Sudah dibayar</div>
+                  <div class="angka">${keRupiah(h.sudahDibayar)}</div>
+                  <div class="kecil angka">dari ${keRupiah(h.totalUtang)}</div>
+                </div>`:''}
+              </div>
+              ${h.totalUtang>0?`<div class="bar-progres"><i style="width:${persen}%"></i></div>`:''}
+
+              <div class="potong-baris">
+                <div class="judul">Potong bulan ini</div>
+                <div class="uang-wrap"><span class="rp">Rp</span>
+                  <input type="text" inputmode="numeric" value="${h.potongKasbon?titikRibuan(h.potongKasbon):''}"
+                         placeholder="0" oninput="formatUangInput(this)"
+                         onchange="ubah(${i},'potongKasbon',this.value)">
+                </div>
+                <div class="chip-baris">
+                  ${k.cicilanRutin>0?`<button class="chip" onclick="setPotong(${i},${k.cicilanRutin})">Cicilan rutin ${keRupiah(k.cicilanRutin)}</button>`:''}
+                  ${h.sisaSebelum>0?`<button class="chip" onclick="setPotong(${i},${h.sisaSebelum})">Lunasi ${keRupiah(h.sisaSebelum)}</button>`:''}
+                  ${h.potongKasbon>0?`<button class="chip netral" onclick="setPotong(${i},0)">Kosongkan</button>`:''}
+                </div>
+                ${lebihGaji?`<div class="utang-catatan warn">⚠️ Potongan lebih besar dari gaji bulan ini (${keRupiah(h.sebelumKasbon)}). Gaji jadi minus — mending dipotong lebih kecil.</div>`:''}
+                ${perkiraan?`<div class="utang-catatan">${perkiraan}</div>`:''}
+              </div>
+
+              <div class="field">
+                <label>Cicilan rutin per bulan (opsional)</label>
+                <div class="uang-wrap"><span class="rp">Rp</span>
+                  <input type="text" inputmode="numeric" value="${k.cicilanRutin?titikRibuan(k.cicilanRutin):''}"
+                         placeholder="0" oninput="formatUangInput(this)"
+                         onchange="ubah(${i},'cicilanRutin',this.value)">
+                </div>
+              </div>
+
+              <details class="lipat" ${buka[kU]?'open':''} ontoggle="toggleBuka('${kU}',this.open)">
+                <summary>Daftar utang / kasbon (${k.utang.length})</summary>
+                <div class="lipat-isi">
+                  ${k.utang.length===0 ? '<div class="kosong-kecil">Belum ada utang tercatat.</div>' :
+                    k.utang.map((b,j)=>`
+                    <div class="baris-catat">
+                      <div class="atas">
+                        <input type="date" value="${b.tanggal||''}" onchange="ubahUtang(${i},${j},'tanggal',this.value)">
+                        <div class="uang-wrap"><span class="rp">Rp</span>
+                          <input type="text" inputmode="numeric" value="${b.jumlah?titikRibuan(b.jumlah):''}"
+                                 placeholder="0" oninput="formatUangInput(this)"
+                                 onchange="ubahUtang(${i},${j},'jumlah',this.value)">
+                        </div>
+                        <button class="hapus-kecil" title="Hapus" onclick="hapusUtang(${i},${j})">✕</button>
+                      </div>
+                      <input class="ket" type="text" placeholder="Keterangan (mis. kasbon berobat)"
+                             value="${escapeHtml(b.ket||'')}" onchange="ubahUtang(${i},${j},'ket',this.value)">
+                    </div>`).join('')}
+                  <button class="tambah-kecil" onclick="tambahUtang(${i})">+ Tambah utang / kasbon baru</button>
+                  ${k.utang.length?`<div class="total-kecil angka"><span>Total utang</span><span>${keRupiah(h.totalUtang)}</span></div>`:''}
+                </div>
+              </details>
+
+              <details class="lipat" ${buka[kR]?'open':''} ontoggle="toggleBuka('${kR}',this.open)">
+                <summary>Riwayat potongan (${k.cicilan.length})</summary>
+                <div class="lipat-isi">
+                  ${k.cicilan.length===0 ? '<div class="kosong-kecil">Belum pernah dipotong.</div>' :
+                    k.cicilan.slice().reverse().map((c)=>{
+                      const j = k.cicilan.indexOf(c);
+                      return `<div class="riwayat-baris">
+                        <span class="kiri">${labelPeriode(c.periode)}${c.tanggal?' · '+tglPendek(c.tanggal):''}</span>
+                        <span class="kanan angka">${keRupiah(c.jumlah||0)}
+                          <button class="hapus-kecil" title="Hapus catatan" onclick="hapusCicilan(${i},${j})">✕</button>
+                        </span>
+                      </div>`;
+                    }).join('')}
+                  <button class="tambah-kecil" onclick="tambahCicilanManual(${i})">+ Catat potongan manual (bulan lalu)</button>
+                  ${k.cicilan.length?`<div class="total-kecil angka"><span>Total sudah dipotong</span><span>${keRupiah(h.sudahDibayar)}</span></div>`:''}
+                </div>
+              </details>
             </div>
           </div>
+
           <div class="rincian angka">
             <div class="r"><span>Gaji pokok</span><span>${keRupiah(k.gajiPokok||0)}</span></div>
             <div class="r">
               <span>Kerajinan ${h.kerajinanHangus?'<span class="catatan-hangus">(hangus, off lebih '+h.offLebih+' hari)</span>':''}</span>
               <span class="${h.kerajinanDapat>0?'plus':''}">+ ${keRupiah(h.kerajinanDapat)}</span>
             </div>
+            ${(k.lembur||0)>0?`<div class="r"><span>Lembur</span><span class="plus">+ ${keRupiah(k.lembur)}</span></div>`:''}
+            ${(k.insentif||0)>0?`<div class="r"><span>Insentif</span><span class="plus">+ ${keRupiah(k.insentif)}</span></div>`:''}
             <div class="r"><span>Potongan off (${h.offLebih} × ${keRupiah(keAngka(document.getElementById('potonganPerOff').value))})</span>
               <span class="${h.potonganOff>0?'minus':''}">− ${keRupiah(h.potonganOff)}</span></div>
-            <div class="r"><span>Kasbon${k.kasbon.length?' ('+k.kasbon.length+'×)':''}</span>
-              <span class="${h.kasbonTotal>0?'minus':''}">− ${keRupiah(h.kasbonTotal)}</span></div>
+            <div class="r"><span>Potongan kasbon</span>
+              <span class="${h.potongKasbon>0?'minus':''}">− ${keRupiah(h.potongKasbon)}</span></div>
             <div class="r total"><span>Gaji diterima</span>
               <span class="${h.total<0?'negatif':''}">${keRupiah(h.total)}</span></div>
+            ${h.totalUtang>0?`<div class="sisa-note">Sisa utang setelah gajian ini: <b>${keRupiah(h.sisaSesudah)}</b></div>`:''}
           </div>
         </div>
       </div>`;
@@ -573,6 +973,11 @@ function render(){
   data.karyawan.forEach(k=>{ total += hitungSatu(k).total; });
   document.getElementById('totalSemua').textContent = keRupiah(total);
   document.getElementById('jumlahOrang').textContent = data.karyawan.length;
+
+  // tombol batal tutup bulan
+  document.getElementById('areaBatal').innerHTML = data.batalTutup
+    ? `<button class="tombol-batal" onclick="batalTutupBulan()">↩️ Batalkan tutup bulan ${labelPeriode(data.batalTutup.periode)}</button>`
+    : '';
 
   renderCetak();
 }
@@ -587,20 +992,21 @@ function renderCetak(){
   const namaBulan = BULAN[parseInt(bl,10)-1] || '';
   const toko = document.getElementById('namaToko').value || 'Daftar Gaji';
 
-  let totalPokok=0,totalKerajinan=0,totalPotOff=0,totalKasbon=0,totalAkhir=0;
+  let tPokok=0,tKerajinan=0,tLembur=0,tInsentif=0,tPotOff=0,tPotKasbon=0,tAkhir=0;
   const rincianKasbon = [];
   const baris = data.karyawan.map((k,i)=>{
     const h = hitungSatu(k);
-    totalPokok += k.gajiPokok||0;
-    totalKerajinan += h.kerajinanDapat;
-    totalPotOff += h.potonganOff;
-    totalKasbon += h.kasbonTotal;
-    totalAkhir += h.total;
-    if(k.kasbon.length){
+    tPokok += k.gajiPokok||0;
+    tKerajinan += h.kerajinanDapat;
+    tLembur += k.lembur||0;
+    tInsentif += k.insentif||0;
+    tPotOff += h.potonganOff;
+    tPotKasbon += h.potongKasbon;
+    tAkhir += h.total;
+    if(h.totalUtang > 0){
       rincianKasbon.push({
-        nama:k.nama,
-        isi:k.kasbon.map(b=>tglPendek(b.tanggal)+': Rp '+titikRibuan(b.jumlah||0)).join(' · '),
-        total:h.kasbonTotal
+        nama:k.nama, totalUtang:h.totalUtang, sudahDibayar:h.sudahDibayar,
+        potong:h.potongKasbon, sisa:h.sisaSesudah
       });
     }
     return `<tr>
@@ -608,11 +1014,12 @@ function renderCetak(){
       <td class="kiri">${escapeHtml(k.nama)}</td>
       <td>${titikRibuan(k.gajiPokok||0)}</td>
       <td>${titikRibuan(h.kerajinanDapat)}</td>
+      <td>${titikRibuan(k.lembur||0)}</td>
+      <td>${titikRibuan(k.insentif||0)}</td>
       <td class="tengah">${k.offDay||0}</td>
       <td>${titikRibuan(h.potonganOff)}</td>
-      <td>${titikRibuan(h.kasbonTotal)}</td>
-      <td><b>${h.total<0?'-':''}${titikRibuan(Math.abs(h.total))}</b></td>
-      <td class="ttd"></td>
+      <td>${titikRibuan(h.potongKasbon)}</td>
+      <td class="terima">${h.total<0?'-':''}${titikRibuan(Math.abs(h.total))}</td>
     </tr>`;
   }).join('');
 
@@ -623,42 +1030,55 @@ function renderCetak(){
       <div class="periode">Periode: ${namaBulan} ${th}</div>
     </div>
     <table class="cetak">
+      <colgroup>
+        <col style="width:4%"><col style="width:17%"><col style="width:10.5%"><col style="width:10%">
+        <col style="width:10%"><col style="width:10%"><col style="width:5%"><col style="width:10%">
+        <col style="width:10.5%"><col style="width:13%">
+      </colgroup>
       <thead><tr>
-        <th style="width:24px">No</th><th>Nama</th><th>Gaji Pokok<br>(Rp)</th>
-        <th>Kerajinan<br>(Rp)</th><th style="width:32px">Off<br>(hari)</th>
-        <th>Pot. Off<br>(Rp)</th><th>Kasbon<br>(Rp)</th><th>Gaji Diterima<br>(Rp)</th>
-        <th>Tanda<br>Tangan</th>
+        <th>No</th><th>Nama</th><th>Gaji Pokok<br>(Rp)</th>
+        <th>Kerajinan<br>(Rp)</th><th>Lembur<br>(Rp)</th><th>Insentif<br>(Rp)</th>
+        <th>Off<br>(hari)</th><th>Pot. Off<br>(Rp)</th><th>Pot. Kasbon<br>(Rp)</th>
+        <th>GAJI DITERIMA<br>(Rp)</th>
       </tr></thead>
       <tbody>${baris}
         <tr class="jumlah">
           <td colspan="2" class="kiri">JUMLAH</td>
-          <td>${titikRibuan(totalPokok)}</td>
-          <td>${titikRibuan(totalKerajinan)}</td>
+          <td>${titikRibuan(tPokok)}</td>
+          <td>${titikRibuan(tKerajinan)}</td>
+          <td>${titikRibuan(tLembur)}</td>
+          <td>${titikRibuan(tInsentif)}</td>
           <td></td>
-          <td>${titikRibuan(totalPotOff)}</td>
-          <td>${titikRibuan(totalKasbon)}</td>
-          <td>${totalAkhir<0?'-':''}${titikRibuan(Math.abs(totalAkhir))}</td>
-          <td></td>
+          <td>${titikRibuan(tPotOff)}</td>
+          <td>${titikRibuan(tPotKasbon)}</td>
+          <td class="terima">${tAkhir<0?'-':''}${titikRibuan(Math.abs(tAkhir))}</td>
         </tr>
       </tbody>
     </table>
     ${rincianKasbon.length ? `
     <div class="cetak-kasbon">
-      <div class="judul-kasbon">Rincian Kasbon</div>
+      <div class="judul-kasbon">Kartu Utang / Kasbon Karyawan</div>
       <table class="cetak kasbon-detail">
-        <thead><tr><th class="kiri" style="text-align:left">Nama</th><th style="text-align:left">Tanggal &amp; Jumlah</th><th style="width:90px">Total (Rp)</th></tr></thead>
+        <colgroup><col style="width:24%"><col style="width:17%"><col style="width:22%"><col style="width:20%"><col style="width:17%"></colgroup>
+        <thead><tr>
+          <th style="text-align:left">Nama</th><th>Total Utang<br>(Rp)</th>
+          <th>Sudah Dibayar<br>s/d Bulan Lalu (Rp)</th><th>Potongan<br>Bulan Ini (Rp)</th>
+          <th>Sisa Utang<br>(Rp)</th>
+        </tr></thead>
         <tbody>
           ${rincianKasbon.map(r=>`<tr>
-            <td class="kiri" style="width:130px">${escapeHtml(r.nama)}</td>
-            <td class="kiri">${escapeHtml(r.isi)}</td>
-            <td>${titikRibuan(r.total)}</td>
+            <td class="kiri">${escapeHtml(r.nama)}</td>
+            <td>${titikRibuan(r.totalUtang)}</td>
+            <td>${titikRibuan(r.sudahDibayar)}</td>
+            <td>${titikRibuan(r.potong)}</td>
+            <td><b>${titikRibuan(r.sisa)}</b></td>
           </tr>`).join('')}
         </tbody>
       </table>
     </div>` : ''}
     <div class="cetak-ttd">
       <div class="blok">
-        Palembang, ______________<br>Pemilik,
+        Palembang, ______________<br>Diperiksa,
         <div class="garis-ttd">( ______________________ )</div>
       </div>
     </div>`;
@@ -679,35 +1099,165 @@ function ubahSetting(id, delta){
   el.value = Math.max(0, keAngka(el.value)+delta);
   simpanDanHitung();
 }
-function tambahKasbon(i){
-  data.karyawan[i].kasbon.push({ tanggal: tglHariIni(), jumlah: 0 });
+function setPotong(i, nilai){
+  data.karyawan[i].potongKasbon = nilai;
   simpanDanHitung();
 }
-function ubahKasbon(i, j, kunci, nilai){
-  if(kunci === 'tanggal'){ data.karyawan[i].kasbon[j].tanggal = nilai; }
-  else { data.karyawan[i].kasbon[j].jumlah = keAngka(nilai); }
+
+/* utang */
+function tambahUtang(i){
+  data.karyawan[i].utang.push({ tanggal: tglHariIni(), jumlah: 0, ket:'' });
+  buka[data.karyawan[i].id + '-utang'] = true;
   simpanDanHitung();
 }
-function hapusKasbon(i, j){
-  data.karyawan[i].kasbon.splice(j,1);
+function ubahUtang(i, j, kunci, nilai){
+  if(kunci === 'jumlah') data.karyawan[i].utang[j].jumlah = keAngka(nilai);
+  else data.karyawan[i].utang[j][kunci] = nilai;
   simpanDanHitung();
 }
+async function hapusUtang(i, j){
+  const b = data.karyawan[i].utang[j];
+  const ok = await modalTanya({
+    judul:'Hapus catatan utang?', ikon:'🗑️',
+    isi:`Utang <b>${keRupiah(b.jumlah||0)}</b>${b.ket?' ('+escapeHtml(b.ket)+')':''}${b.tanggal?' tanggal '+tglPendek(b.tanggal):''} akan dihapus. Sisa utang otomatis berkurang.`,
+    ok:'Hapus', batal:'Batal', bahaya:true
+  });
+  if(!ok) return;
+  data.karyawan[i].utang.splice(j,1);
+  simpanDanHitung();
+}
+
+/* riwayat potongan */
+async function tambahCicilanManual(i){
+  const hasil = await modalIsian({
+    judul:'Catat potongan lama', ikon:'📝',
+    isi:'Buat potongan kasbon yang <b>sudah pernah dipotong</b> di bulan-bulan sebelumnya tapi belum tercatat di aplikasi ini.',
+    fields:[
+      { nama:'jumlah', label:'Jumlah yang sudah dipotong', tipe:'uang' },
+      { nama:'periode', label:'Untuk bulan', tipe:'month',
+        nilai: periodeGeser(document.getElementById('periode').value, -1) }
+    ],
+    ok:'Simpan', batal:'Batal'
+  });
+  if(!hasil) return;
+  const jumlah = keAngka(hasil.jumlah);
+  if(jumlah <= 0){
+    return modalInfo('Jumlahnya belum diisi', 'Isi dulu jumlah potongannya, mis. 500.000.', '⚠️');
+  }
+  data.karyawan[i].cicilan.push({ tanggal:'', periode: hasil.periode||'', jumlah });
+  buka[data.karyawan[i].id + '-riwayat'] = true;
+  simpanDanHitung();
+  toast('Potongan ' + keRupiah(jumlah) + ' dicatat.', true);
+}
+async function hapusCicilan(i, j){
+  const c = data.karyawan[i].cicilan[j];
+  const ok = await modalTanya({
+    judul:'Hapus catatan potongan?', ikon:'🗑️',
+    isi:`Potongan <b>${keRupiah(c.jumlah||0)}</b> bulan ${escapeHtml(labelPeriode(c.periode))} akan dihapus.
+         <div class="tegas" style="margin-top:8px">Sisa utang akan bertambah lagi sebesar ${keRupiah(c.jumlah||0)}.</div>`,
+    ok:'Hapus', batal:'Batal', bahaya:true
+  });
+  if(!ok) return;
+  data.karyawan[i].cicilan.splice(j,1);
+  simpanDanHitung();
+}
+
+/* karyawan */
 function tambahKaryawan(){
-  data.karyawan.push({ nama:'', gajiPokok:0, kerajinan:0, offDay:0, kasbon:[] });
+  data.karyawan.push({ id:idBaru(), nama:'', gajiPokok:0, kerajinan:0, lembur:0, insentif:0,
+                       offDay:0, utang:[], cicilan:[], potongKasbon:0, cicilanRutin:0 });
   simpanDanHitung();
-  // fokus ke nama karyawan baru
   setTimeout(()=>{
     const semua = document.querySelectorAll('.kartu-atas input.nama');
     if(semua.length) semua[semua.length-1].focus();
   },50);
 }
-function hapusKaryawan(i){
-  const nama = data.karyawan[i].nama || 'karyawan ini';
-  if(confirm('Hapus '+nama+'?')){
-    data.karyawan.splice(i,1);
-    simpanDanHitung();
-  }
+async function hapusKaryawan(i){
+  const k = data.karyawan[i];
+  const h = hitungSatu(k);
+  const ok = await modalTanya({
+    judul:'Hapus ' + (k.nama || 'karyawan ini') + '?', ikon:'🗑️',
+    isi:'Semua datanya hilang dan tidak bisa dikembalikan.' +
+        (h.sisaSebelum > 0
+          ? `<div class="tegas" style="margin-top:8px">⚠️ Dia masih punya sisa utang ${keRupiah(h.sisaSebelum)}. Riwayat kasbonnya ikut kehapus.</div>`
+          : ''),
+    ok:'Hapus', batal:'Batal', bahaya:true
+  });
+  if(!ok) return;
+  data.karyawan.splice(i,1);
+  simpanDanHitung();
 }
+
+/* ---------- tutup bulan ---------- */
+async function tutupBulan(){
+  const per = document.getElementById('periode').value;
+  const dipotong = data.karyawan
+    .map(k=>({ k, h:hitungSatu(k) }))
+    .filter(x=> x.h.potongKasbon > 0);
+
+  const daftar = dipotong.length
+    ? `<div style="margin-top:10px">Potongan kasbon ini akan dicatat ke riwayat:</div>
+       <div class="catat">${dipotong.map(x=>`
+         <div class="baris">
+           <span>${escapeHtml(x.k.nama||'(tanpa nama)')}</span>
+           <b>${keRupiah(x.h.potongKasbon)}</b>
+         </div>
+         <div class="baris"><span class="sisa">sisa utang jadi ${keRupiah(x.h.sisaSesudah)}</span><span></span></div>`).join('')}
+       </div>`
+    : '<div class="catat">Tidak ada potongan kasbon bulan ini.</div>';
+
+  const ok = await modalTanya({
+    judul:'Tutup gajian ' + labelPeriode(per) + '?', ikon:'✅',
+    isi: daftar +
+      `<ul>
+        <li>Periode pindah ke <b>${labelPeriode(periodeGeser(per,1))}</b></li>
+        <li>Hari off, lembur, insentif, dan kolom "potong bulan ini" dikosongkan</li>
+        <li>Gaji pokok, kerajinan, dan sisa utang tetap</li>
+      </ul>
+      <div class="tegas" style="margin-top:10px">Pastikan PDF bulan ini sudah dicetak dulu ya. Masih bisa dibatalkan lewat tombol "Batalkan tutup bulan".</div>`,
+    ok:'Ya, tutup bulan', batal:'Belum'
+  });
+  if(!ok) return;
+
+  data.batalTutup = { periode: per, karyawan: JSON.parse(JSON.stringify(data.karyawan)) };
+
+  data.karyawan.forEach(k=>{
+    const h = hitungSatu(k);
+    if(h.potongKasbon > 0){
+      k.cicilan.push({ tanggal: tglHariIni(), periode: per, jumlah: h.potongKasbon });
+    }
+    k.potongKasbon = 0;
+    k.offDay = 0;
+    k.lembur = 0;
+    k.insentif = 0;
+    // siapkan cicilan bulan depan otomatis kalau ada cicilan rutin & masih ada sisa utang
+    const sisa = Math.max(0, hitungSatu(k).totalUtang - hitungSatu(k).sudahDibayar);
+    if(k.cicilanRutin > 0 && sisa > 0) k.potongKasbon = Math.min(k.cicilanRutin, sisa);
+  });
+
+  document.getElementById('periode').value = periodeGeser(per,1);
+  simpanDanHitung();
+  window.scrollTo({top:0, behavior:'smooth'});
+  toast(labelPeriode(per) + ' sudah ditutup. Sekarang lanjut ke ' + labelPeriode(periodeGeser(per,1)) + '.', true);
+}
+
+async function batalTutupBulan(){
+  if(!data.batalTutup) return;
+  const per = data.batalTutup.periode;
+  const ok = await modalTanya({
+    judul:'Batalkan tutup bulan?', ikon:'↩️',
+    isi:`Data dikembalikan seperti sebelum tutup bulan <b>${escapeHtml(labelPeriode(per))}</b>.
+         <div class="tegas" style="margin-top:8px">Semua isian yang dimasukkan setelah tutup bulan akan hilang.</div>`,
+    ok:'Ya, kembalikan', batal:'Batal', bahaya:true
+  });
+  if(!ok) return;
+  data.karyawan = data.batalTutup.karyawan;
+  document.getElementById('periode').value = per;
+  data.batalTutup = null;
+  simpanDanHitung();
+  toast('Data dikembalikan ke ' + labelPeriode(per) + '.', true);
+}
+
 function simpanDanHitung(){ simpan(); render(); }
 
 /* ---------- mulai ---------- */
@@ -715,6 +1265,18 @@ muat();
 render();
 document.getElementById('namaToko').addEventListener('change', simpanDanHitung);
 document.getElementById('periode').addEventListener('change', simpanDanHitung);
+
+/* modal: tombol, klik latar, Esc, Enter */
+document.getElementById('modalOk').addEventListener('click', modalOk);
+document.getElementById('modalBatal').addEventListener('click', ()=>tutupModal(null));
+document.getElementById('modalLapis').addEventListener('mousedown', function(e){
+  if(e.target === this) tutupModal(null);
+});
+document.addEventListener('keydown', function(e){
+  if(document.getElementById('modalLapis').hidden) return;
+  if(e.key === 'Escape'){ e.preventDefault(); tutupModal(null); }
+  else if(e.key === 'Enter' && e.target.tagName !== 'BUTTON'){ e.preventDefault(); modalOk(); }
+});
 </script>
 </body>
 </html>
