@@ -985,8 +985,21 @@ function namaFileAman(s){
   return String(s||'gaji').toLowerCase().trim()
     .replace(/[^a-z0-9]+/g,'-').replace(/(^-+|-+$)/g,'') || 'gaji';
 }
-function eksporJSON(){
+async function eksporJSON(){
   simpan();
+
+  const usulan = 'gaji-' + namaFileAman(data.namaToko) + '-' + (data.periode||'tanpa-periode');
+  const jawab = await modalIsian({
+    judul: 'Nama file backup',
+    ikon: '⬇️',
+    isi: 'Kasih nama filenya biar gampang dicari nanti. Kalau dikosongin, dipakai nama usulan di bawah.',
+    fields: [{ nama:'nama', label:'Nama file (.json otomatis ditambah)', tipe:'text', nilai: usulan, placeholder: usulan }],
+    ok: 'Simpan file'
+  });
+  if(jawab === null) return;   // dibatalkan
+
+  const namaFile = namaFileAman(jawab.nama || usulan) + '.json';
+
   const isi = {
     versi: 3,
     diekspor: new Date().toISOString(),
@@ -1000,7 +1013,6 @@ function eksporJSON(){
   };
   const blob = new Blob([JSON.stringify(isi, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
-  const namaFile = 'gaji-' + namaFileAman(data.namaToko) + '-' + (data.periode||'tanpa-periode') + '.json';
   const a = document.createElement('a');
   a.href = url;
   a.download = namaFile;
@@ -1008,6 +1020,7 @@ function eksporJSON(){
   a.click();
   document.body.removeChild(a);
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
+  toast('Backup disimpan: ' + namaFile, true);
 }
 function imporJSON(event){
   const file = event.target.files && event.target.files[0];
