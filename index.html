@@ -52,6 +52,100 @@
 
   main{max-width:680px;margin:0 auto;padding:16px}
 
+  /* ===== NAVIGASI KARYAWAN: STRIP TAB (HP) & PANEL KANAN (LAYAR LEBAR) ===== */
+  .strip-tab{
+    position:sticky;top:0;z-index:40;background:var(--kertas);
+    border-bottom:2px solid var(--garis-kuat);margin-bottom:14px;
+    padding:9px 0;
+  }
+  .strip-tab-isi{
+    max-width:680px;margin:0 auto;padding:0 16px;
+    display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;
+  }
+  .strip-tab-isi::-webkit-scrollbar{display:none}
+  .tab{
+    flex-shrink:0;display:flex;align-items:center;gap:7px;
+    border:2px solid var(--garis);background:var(--putih);border-radius:22px;
+    padding:7px 13px 7px 8px;font-family:inherit;cursor:pointer;color:var(--tinta);
+  }
+  .tab .tab-no{
+    width:22px;height:22px;border-radius:50%;background:#DCD8C8;color:var(--tinta);
+    font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .tab .tab-teks{display:grid;gap:1px;text-align:left;line-height:1.15}
+  .tab .tab-nama{display:block;font-size:13px;font-weight:700;white-space:nowrap}
+  .tab .tab-nilai{display:block;font-size:11.5px;font-weight:700;color:var(--abu);white-space:nowrap}
+  .tab.aktif{background:var(--hijau);border-color:var(--hijau);color:#fff}
+  .tab.aktif .tab-no{background:rgba(255,255,255,.25);color:#fff}
+  .tab.aktif .tab-nilai{color:rgba(255,255,255,.9)}
+  .tab .titik-utang{width:8px;height:8px;border-radius:50%;background:var(--merah);flex-shrink:0}
+  .tab.aktif .titik-utang{background:#FFC9C9}
+
+  .rel-samping{display:none}
+
+  @media (min-width:1180px){
+    .strip-tab{display:none}
+    /* dua kolom beneran: kartu di kiri, ringkasan di kanan, dua-duanya
+       diketengahkan sebagai satu kesatuan (680 + 20 + 290 = 990px) */
+    .wadah-utama{display:flex;justify-content:center;align-items:flex-start;gap:20px}
+    main{margin:0;width:680px;flex-shrink:0}
+    .header-inner,.bar-inner{max-width:990px}
+    .rel-samping{
+      display:flex;flex-direction:column;overflow:hidden;
+      /* sticky: ikut kegulung bareng halaman, baru berhenti pas nyentuh atas layar */
+      position:sticky;top:16px;margin-top:16px;width:290px;flex-shrink:0;
+      /* 92px disisakan buat bar total di bawah biar nggak ketutup */
+      max-height:calc(100vh - 16px - 92px);
+      background:var(--putih);border:2px solid var(--garis-kuat);border-radius:var(--radius);
+      box-shadow:0 2px 0 rgba(0,0,0,.10);
+    }
+    .rel-judul{
+      flex-shrink:0;
+      background:var(--hijau);color:#fff;padding:11px 14px;font-size:13.5px;font-weight:800;
+      display:flex;justify-content:space-between;align-items:center;gap:8px;
+    }
+    .rel-judul span:last-child{font-size:12px;font-weight:700;opacity:.9}
+    /* daftar yang discroll: mentok 4 orang, sisanya digulung */
+    .rel-daftar{
+      padding:8px;overflow-y:auto;min-height:0;
+      max-height:min(324px, calc(100vh - 292px));
+      scrollbar-width:thin;
+    }
+    .rel-daftar::-webkit-scrollbar{width:8px}
+    .rel-daftar::-webkit-scrollbar-thumb{background:#C7C2B0;border-radius:8px}
+    .rel-item{
+      width:100%;display:flex;align-items:center;gap:9px;text-align:left;
+      background:var(--putih);border:2px solid var(--garis);border-radius:10px;
+      padding:9px 10px;margin-bottom:7px;cursor:pointer;font-family:inherit;color:var(--tinta);
+    }
+    .rel-item:hover{border-color:var(--hijau)}
+    .rel-item.aktif{border-color:var(--hijau);background:var(--hijau-muda)}
+    .rel-item .rel-no{
+      width:24px;height:24px;border-radius:50%;background:var(--hijau);color:#fff;
+      font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .rel-isi{flex:1;min-width:0;display:block}
+    .rel-nama{display:block;font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .rel-nilai{display:block;font-size:15px;font-weight:800;margin-top:2px}
+    .rel-utang{display:block;font-size:11.5px;font-weight:700;color:var(--merah);margin-top:2px}
+    .rel-lunas{display:block;font-size:11.5px;font-weight:700;color:var(--hijau);margin-top:2px}
+    .rel-total{
+      flex-shrink:0;
+      border-top:2px solid var(--garis-kuat);padding:11px 14px;background:#F7F5EC;
+      display:grid;gap:5px;
+    }
+    .rel-total .baris{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;font-weight:700}
+    .rel-total .baris.besar{font-size:15px;font-weight:800}
+    .rel-total .baris .merah{color:var(--merah)}
+    .rel-kosong{padding:16px 14px;font-size:13px;color:var(--abu);font-weight:600}
+  }
+
+  /* sorot sebentar pas dilompati dari tab */
+  .kartu.sorot{
+    border-color:var(--hijau);
+    box-shadow:0 0 0 4px rgba(11,83,64,.20), 0 2px 0 rgba(0,0,0,.10);
+  }
+
   /* ===== SPANDUK MODE CONTOH ===== */
   .spanduk-contoh{
     display:flex;align-items:center;gap:12px;
@@ -94,6 +188,12 @@
     background:var(--putih);color:var(--tinta);
   }
   .field input:focus{outline:2.5px solid var(--hijau);outline-offset:0;border-color:var(--hijau)}
+  .field select{
+    width:100%;border:2px solid var(--garis);border-radius:10px;
+    padding:11px 12px;font-family:inherit;font-size:14.5px;font-weight:700;
+    background:var(--putih);color:var(--tinta);
+  }
+  .field select:focus{outline:2.5px solid var(--hijau);border-color:var(--hijau)}
   .toggle-row{
     display:flex;justify-content:space-between;align-items:center;gap:12px;
     background:#F7F5EC;border:2px solid var(--garis);border-radius:10px;padding:11px 12px;
@@ -373,14 +473,17 @@
   /* ===== CETAK: KERTAS NOTA 10,4 x 16,4 cm, BERDIRI (PORTRAIT) ===== */
   .halaman-cetak{display:none}
   @media print{
-    @page{size:104mm 164mm;margin:5mm 5mm 6mm}
+    /* Ukuran kertas SENGAJA nggak dipaksa dari sini.
+       Kertas nota 104x164mm bukan ukuran standar — kalau CSS maksa ukuran itu,
+       driver printer bisa nyekalain & nggeser halamannya sendiri (isinya jadi
+       lari ke kanan lalu kepotong). Jadi ukuran kertas diambil dari dialog print,
+       dan yang dikunci di sini cuma LEBAR ISI = 94mm, biar aman di kertas apa pun. */
+    @page{margin:5mm}
     body{background:#fff;padding:0;font-size:12px}
-    header,main,.bar-total{display:none !important}
-    /* lebar dikunci 94mm (= 104mm kertas − 2×5mm margin). Jadi kalaupun printer/dialog
-       kepilih kertas lain, isinya tetap muat di kertas nota dan nggak kepotong. */
+    header,main,.bar-total,.rel-samping,.strip-tab{display:none !important}
     .halaman-cetak{
       display:block;color:#000;font-variant-numeric:tabular-nums;
-      width:94mm;max-width:94mm;margin:0;
+      width:100%;max-width:94mm;margin:0;
     }
 
     /* kop nota */
@@ -461,6 +564,11 @@
   </div>
 </header>
 
+<nav class="strip-tab" id="stripTab" hidden>
+  <div class="strip-tab-isi" id="stripTabIsi"></div>
+</nav>
+
+<div class="wadah-utama">
 <main>
   <div class="spanduk-contoh" id="spandukContoh" hidden>
     <div>
@@ -510,6 +618,22 @@
         <input type="file" id="inputImpor" accept="application/json,.json" style="display:none" onchange="imporJSON(event)">
         <div class="backup-ket">Simpan file .json ini ke WA/Google Drive tiap habis gajian, biar data aman kalau HP-nya kenapa-napa atau mau pindah device. Riwayat utang kasbon ikut kesimpan.</div>
       </div>
+      <div class="backup-blok">
+        <div class="backup-judul">Setelan waktu ngeprint</div>
+        <div class="field">
+          <label>Ukuran kertas</label>
+          <select id="ukuranKertas" onchange="simpanDanHitung()">
+            <option value="a4">A4 berdiri — sama kayak Accurate (disarankan)</option>
+            <option value="nota">Kertas nota 10,4 × 16,4 cm</option>
+          </select>
+          <div class="field-ket" id="ketKertas"></div>
+        </div>
+        <div class="backup-ket">
+          Di jendela print, pastikan juga:<br>
+          • <b>Header dan footer</b> → dimatikan, biar tanggal &amp; alamat file nggak ikut kecetak.<br>
+          • <b>Margin</b> → Default.
+        </div>
+      </div>
     </div>
   </details>
 
@@ -522,6 +646,9 @@
   <div class="tutup-ket">Tekan ini setelah gaji dibayar. Potongan kasbon bulan ini masuk ke riwayat, sisa utang berkurang, lalu pindah ke bulan berikutnya.</div>
 </main>
 
+<aside class="rel-samping" id="relSamping" hidden></aside>
+</div>
+
 <div class="bar-total">
   <div class="bar-inner">
     <div class="bar-info">
@@ -532,7 +659,10 @@
   </div>
 </div>
 
-<!-- ===== TAMPILAN CETAK A4 ===== -->
+<!-- ===== TAMPILAN CETAK ===== -->
+<!-- diisi otomatis oleh terapkanKertas(): aturan @page nggak bisa dipilih pakai
+     selektor CSS biasa, jadi ditulis ulang ke sini tiap ganti ukuran kertas -->
+<style id="gayaKertas"></style>
 <div class="halaman-cetak" id="halamanCetak"></div>
 
 <!-- ===== MODAL ===== -->
@@ -746,6 +876,7 @@ function simpan(){
   data.jatahOff = keAngka(document.getElementById('jatahOff').value);
   data.potonganPerOff = keAngka(document.getElementById('potonganPerOff').value);
   data.kerajinanHangus = document.getElementById('kerajinanHangus').checked;
+  data.ukuranKertas = ukuranKertasDipakai();
   if(MODE_CONTOH) return;                       // mode contoh: jangan timpa data asli
   try{ localStorage.setItem(KUNCI, JSON.stringify(data)); }catch(e){}
 }
@@ -769,6 +900,8 @@ function muat(){
   document.getElementById('jatahOff').value = data.jatahOff ?? 4;
   document.getElementById('potonganPerOff').value = titikRibuan(data.potonganPerOff ?? 100000);
   document.getElementById('kerajinanHangus').checked = data.kerajinanHangus !== false;
+  document.getElementById('ukuranKertas').value = KERTAS[data.ukuranKertas] ? data.ukuranKertas : 'a4';
+  terapkanKertas();
 }
 
 /* ---------- ekspor / impor JSON (backup) ---------- */
@@ -786,6 +919,7 @@ function eksporJSON(){
     jatahOff: data.jatahOff,
     potonganPerOff: data.potonganPerOff,
     kerajinanHangus: data.kerajinanHangus,
+    ukuranKertas: data.ukuranKertas,
     karyawan: data.karyawan
   };
   const blob = new Blob([JSON.stringify(isi, null, 2)], {type:'application/json'});
@@ -832,6 +966,7 @@ function imporJSON(event){
       jatahOff: baru.jatahOff ?? 4,
       potonganPerOff: baru.potonganPerOff ?? 100000,
       kerajinanHangus: baru.kerajinanHangus !== false,
+      ukuranKertas: baru.ukuranKertas,
       karyawan: baru.karyawan
     });
 
@@ -840,6 +975,7 @@ function imporJSON(event){
     document.getElementById('jatahOff').value = data.jatahOff;
     document.getElementById('potonganPerOff').value = titikRibuan(data.potonganPerOff);
     document.getElementById('kerajinanHangus').checked = data.kerajinanHangus;
+    document.getElementById('ukuranKertas').value = KERTAS[data.ukuranKertas] ? data.ukuranKertas : 'a4';
 
     simpanDanHitung();
     event.target.value = '';
@@ -904,7 +1040,7 @@ function render(){
       const lebihGaji = h.potongKasbon > h.sebelumKasbon && h.potongKasbon > 0;
 
       return `
-      <div class="kartu">
+      <div class="kartu" id="kartu-${k.id}">
         <div class="kartu-atas">
           <div class="nomor">${i+1}</div>
           <input class="nama" type="text" value="${escapeHtml(k.nama)}" placeholder="Nama karyawan"
@@ -1067,11 +1203,17 @@ function render(){
     }).join('');
   }
 
-  // total keseluruhan
+  // total keseluruhan + bahan buat tab navigasi & panel ringkasan
   let total = 0;
-  data.karyawan.forEach(k=>{ total += hitungSatu(k).total; });
+  const ringkasan = data.karyawan.map(k=>{
+    const h = hitungSatu(k);
+    total += h.total;
+    return { id:k.id, nama:k.nama, total:h.total, sisaUtang:h.sisaSesudah,
+             totalUtang:h.totalUtang, potongKasbon:h.potongKasbon };
+  });
   document.getElementById('totalSemua').textContent = keRupiah(total);
   document.getElementById('jumlahOrang').textContent = data.karyawan.length;
+  renderNavigasi(ringkasan);
 
   // tombol batal tutup bulan
   document.getElementById('areaBatal').innerHTML = data.batalTutup
@@ -1084,6 +1226,132 @@ function render(){
 function escapeHtml(s){
   return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+/* ---------- ukuran kertas cetak ----------
+   Tata letak notanya SATU macam aja (lebar 94mm). Yang beda cuma ukuran halaman
+   dan seberapa besar notanya dicetak:
+
+   • 'a4'   → halaman A4 berdiri, persis kayak PDF yang keluar dari Accurate
+              (8,26 x 11,69 in). Notanya dizoom 2x biar penuh selebar A4, jadi
+              kalau printernya ngecilin A4 ke kertas nota, hurufnya balik ke
+              ukuran normal — dan kalau kecetak di A4 beneran, hurufnya gede.
+   • 'nota' → halaman 104 x 164 mm, dicetak apa adanya (zoom 1x). Cuma jalan
+              kalau ukuran kertas itu memang ada/dibikin di driver printernya.  */
+const KERTAS = {
+  a4:   { ukuran:'A4 portrait', margin:'10mm', zoom: 190/94,
+          ket:'Halaman A4 berdiri, sama persis kayak nota dari Accurate. Notanya otomatis diperbesar biar penuh selebar kertas. Pakai ini dulu — paling cocok sama printer yang sudah jalan.' },
+  nota: { ukuran:'104mm 164mm', margin:'5mm', zoom: 1,
+          ket:'Halaman pas seukuran kertas nota. Cuma jalan kalau ukuran 10,4 × 16,4 cm sudah terdaftar di driver printernya, dan skala di jendela print harus 100%.' }
+};
+function ukuranKertasDipakai(){
+  const el = document.getElementById('ukuranKertas');
+  return KERTAS[el && el.value] ? el.value : 'a4';
+}
+function terapkanKertas(){
+  const k = KERTAS[ukuranKertasDipakai()];
+  document.getElementById('gayaKertas').textContent =
+    `@media print{
+       @page{size:${k.ukuran};margin:${k.margin}}
+       .halaman-cetak{zoom:${k.zoom.toFixed(4)}}
+     }`;
+  const ket = document.getElementById('ketKertas');
+  if(ket) ket.textContent = k.ket;
+}
+
+/* ---------- navigasi karyawan (strip tab + panel ringkasan kanan) ---------- */
+function renderNavigasi(ringkasan){
+  const strip = document.getElementById('stripTab');
+  const isi   = document.getElementById('stripTabIsi');
+  const rel   = document.getElementById('relSamping');
+  const ada   = ringkasan.length > 0;
+
+  strip.hidden = !ada;
+  rel.hidden   = !ada;
+  if(!ada){ isi.innerHTML = ''; rel.innerHTML = ''; return; }
+
+  const geser = isi.scrollLeft;   // simpan posisi geser biar nggak lompat pas render ulang
+
+  isi.innerHTML = ringkasan.map((r,i)=>`
+    <button class="tab" id="tab-${r.id}" onclick="lompatKe('${r.id}')">
+      <span class="tab-no">${i+1}</span>
+      <span class="tab-teks">
+        <span class="tab-nama">${escapeHtml(r.nama || 'Tanpa nama')}</span>
+        <span class="tab-nilai">${keRupiah(r.total)}</span>
+      </span>
+      ${r.sisaUtang>0?'<span class="titik-utang" title="Masih punya utang"></span>':''}
+    </button>`).join('');
+  isi.scrollLeft = geser;
+
+  const totalGaji  = ringkasan.reduce((a,b)=>a+b.total,0);
+  const totalUtang = ringkasan.reduce((a,b)=>a+b.sisaUtang,0);
+  const totalPotong= ringkasan.reduce((a,b)=>a+b.potongKasbon,0);
+
+  rel.innerHTML = `
+    <div class="rel-judul"><span>Ringkasan gaji</span><span>${ringkasan.length} orang</span></div>
+    <div class="rel-daftar">
+      ${ringkasan.map((r,i)=>`
+        <button class="rel-item" id="rel-${r.id}" onclick="lompatKe('${r.id}')">
+          <span class="rel-no">${i+1}</span>
+          <span class="rel-isi">
+            <span class="rel-nama">${escapeHtml(r.nama || 'Tanpa nama')}</span>
+            <span class="rel-nilai angka">${keRupiah(r.total)}</span>
+            ${r.sisaUtang>0
+              ? `<span class="rel-utang angka">Sisa utang ${keRupiah(r.sisaUtang)}</span>`
+              : (r.totalUtang>0 ? '<span class="rel-lunas">Utang lunas ✓</span>' : '')}
+          </span>
+        </button>`).join('')}
+    </div>
+    <div class="rel-total">
+      <div class="baris"><span>Potongan kasbon</span><span class="angka">${keRupiah(totalPotong)}</span></div>
+      <div class="baris"><span>Sisa utang semua</span><span class="angka ${totalUtang>0?'merah':''}">${keRupiah(totalUtang)}</span></div>
+      <div class="baris besar"><span>Total gajian</span><span class="angka">${keRupiah(totalGaji)}</span></div>
+    </div>`;
+
+  tandaiTabAktif();
+}
+
+function lompatKe(id){
+  const kartu = document.getElementById('kartu-' + id);
+  if(!kartu) return;
+  const strip = document.getElementById('stripTab');
+  const jarak = (strip && !strip.hidden ? strip.offsetHeight : 0) + 10;
+  const y = kartu.getBoundingClientRect().top + window.pageYOffset - jarak;
+  window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+  kartu.classList.add('sorot');
+  setTimeout(()=>kartu.classList.remove('sorot'), 1400);
+}
+
+let tandaiMenunggu = false;
+function tandaiTabAktif(){
+  const strip = document.getElementById('stripTab');
+  const jarak = (strip && !strip.hidden ? strip.offsetHeight : 0) + 20;
+  let aktif = null;
+  data.karyawan.forEach(k=>{
+    const kartu = document.getElementById('kartu-' + k.id);
+    if(kartu && kartu.getBoundingClientRect().top - jarak <= 0) aktif = k.id;
+  });
+  if(!aktif && data.karyawan.length) aktif = data.karyawan[0].id;
+
+  data.karyawan.forEach(k=>{
+    const t = document.getElementById('tab-' + k.id);
+    const r = document.getElementById('rel-' + k.id);
+    if(t) t.classList.toggle('aktif', k.id === aktif);
+    if(r) r.classList.toggle('aktif', k.id === aktif);
+  });
+
+  // geser strip biar tab yang aktif kelihatan
+  const tAktif = document.getElementById('tab-' + aktif);
+  const isi = document.getElementById('stripTabIsi');
+  if(tAktif && isi){
+    const kiri = tAktif.offsetLeft - isi.offsetWidth/2 + tAktif.offsetWidth/2;
+    isi.scrollTo({ left: Math.max(0, kiri), behavior:'smooth' });
+  }
+}
+window.addEventListener('scroll', ()=>{
+  if(tandaiMenunggu) return;
+  tandaiMenunggu = true;
+  requestAnimationFrame(()=>{ tandaiMenunggu = false; tandaiTabAktif(); });
+}, {passive:true});
 
 /* ---------- render halaman cetak (kertas nota 10,4 x 16,4 cm) ---------- */
 function renderCetak(){
@@ -1345,7 +1613,7 @@ async function batalTutupBulan(){
   toast('Data dikembalikan ke ' + labelPeriode(per) + '.', true);
 }
 
-function simpanDanHitung(){ simpan(); render(); }
+function simpanDanHitung(){ simpan(); terapkanKertas(); render(); }
 
 /* ---------- mulai ---------- */
 muat();
