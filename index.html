@@ -393,11 +393,20 @@
   .bar-info .label{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;opacity:.95;font-weight:700}
   .bar-info .nilai{font-size:21px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .tombol-cetak{
-    background:#fff;color:var(--hijau-tua);border:none;border-radius:10px;
-    padding:13px 18px;font-family:inherit;font-size:15px;font-weight:800;
-    cursor:pointer;flex-shrink:0;
+    background:transparent;color:#fff;border:2px solid rgba(255,255,255,.55);border-radius:10px;
+    padding:11px 13px;font-family:inherit;font-size:14px;font-weight:800;
+    cursor:pointer;flex-shrink:0;white-space:nowrap;
   }
+  .tombol-cetak.utama{background:#fff;color:var(--hijau-tua);border-color:#fff}
   .tombol-cetak:active{transform:scale(.97)}
+  /* layar sempit: tombolnya turun ke baris kedua, dibagi rata, biar nggak kepotong */
+  @media (max-width:560px){
+    body{padding-bottom:180px}
+    .bar-inner{flex-wrap:wrap;gap:9px}
+    .bar-info{flex:1 1 100%}
+    .bar-info .nilai{font-size:19px}
+    .tombol-cetak{flex:1 1 0;min-width:0;padding:12px 8px;font-size:13.5px}
+  }
 
   /* ===== TOMBOL ===== */
   .tombol-tambah{
@@ -488,7 +497,7 @@
   @keyframes toastKeluar{to{opacity:0;transform:translateY(8px)}}
 
   /* ===== CETAK: KERTAS NOTA 10,4 x 16,4 cm, BERDIRI (PORTRAIT) ===== */
-  .halaman-cetak{display:none}
+  .halaman-cetak,.halaman-rangkuman{display:none}
   @media print{
     /* Ukuran kertas SENGAJA nggak dipaksa dari sini.
        Kertas nota 104x164mm bukan ukuran standar — kalau CSS maksa ukuran itu,
@@ -559,6 +568,52 @@
     .cetak-ttd .blok{text-align:center;width:52mm}
     .cetak-ttd .garis-ttd{margin-top:34px;border-top:1.2px solid #000;padding-top:3px;font-weight:700}
     .modal-lapis,.toast-wadah{display:none !important}
+
+    /* dua jenis dokumen: nota per karyawan, atau rangkuman sebulan.
+       yang dicetak ditentukan lewat data-cetak di <body> */
+    body[data-cetak="rangkuman"] .halaman-cetak{display:none !important}
+    body[data-cetak="rangkuman"] .halaman-rangkuman{display:block}
+
+    .halaman-rangkuman{color:#000;font-variant-numeric:tabular-nums}
+    .rk-kop{
+      display:flex;justify-content:space-between;align-items:flex-end;gap:12px;
+      border-bottom:3px solid #000;padding-bottom:8px;margin-bottom:10px;
+    }
+    .rk-kop h2{font-size:19px;font-weight:800;text-transform:uppercase;line-height:1.15}
+    .rk-kop .doc{font-size:12.5px;font-weight:700;letter-spacing:.05em;margin-top:2px}
+    .rk-kop .periode{font-size:14px;font-weight:800;margin-top:3px}
+    .rk-kop .kanan{text-align:right;font-size:10.5px;line-height:1.5;white-space:nowrap}
+
+    .rk-kpi{display:flex;gap:8px;margin-bottom:12px}
+    .rk-kpi div{
+      flex:1;border:1.5px solid #000;padding:7px 9px;
+    }
+    .rk-kpi .label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+    .rk-kpi .nilai{font-size:14px;font-weight:800;margin-top:3px;line-height:1.15}
+
+    .rk-judul{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin:14px 0 4px}
+    table.rk{width:100%;border-collapse:collapse;table-layout:fixed}
+    table.rk th,table.rk td{
+      border:1px solid #000;padding:6px 6px;text-align:right;
+      font-size:12px;line-height:1.25;word-wrap:break-word;overflow-wrap:break-word;
+    }
+    table.rk th{background:#E4E4E0;text-align:center;font-weight:800;font-size:10px;line-height:1.3;padding:5px 3px}
+    table.rk td.kiri{text-align:left;font-weight:700}
+    table.rk td.tengah{text-align:center}
+    table.rk td.terima{font-weight:800;font-size:13px}
+    table.rk tbody tr:nth-child(even) td{background:#F6F6F3}
+    table.rk tr.jumlah td{background:#DCDCD6;font-weight:800}
+    table.rk thead{display:table-header-group}
+    table.rk tr{page-break-inside:avoid}
+    table.rk.kecil th,table.rk.kecil td{font-size:10.5px;padding:5px 4px}
+    table.rk.kecil th{font-size:9px}
+
+    .rk-catatan{font-size:10.5px;line-height:1.55;margin-top:6px}
+    .rk-catatan b{font-weight:800}
+    .rk-blok{page-break-inside:avoid}
+    .rk-ttd{display:flex;justify-content:space-between;gap:20px;margin-top:26px;font-size:11.5px;page-break-inside:avoid}
+    .rk-ttd .blok{text-align:center;width:60mm}
+    .rk-ttd .garis{margin-top:46px;border-top:1.2px solid #000;padding-top:4px;font-weight:700}
   }
 
   @media (min-width:700px){
@@ -592,7 +647,7 @@
       <b>MODE CONTOH — data dummy buat tes cetak</b>
       <small>Data asli di HP/laptop ini tidak tersentuh dan tidak akan tertimpa. Semua yang diubah di sini hilang begitu halaman ditutup.</small>
     </div>
-    <button type="button" onclick="window.print()">🖨️ Cetak</button>
+    <button type="button" onclick="cetak('nota')">🧾 Cetak</button>
   </div>
 
   <details class="pengaturan">
@@ -672,7 +727,8 @@
       <div class="label">Total gajian · <span id="jumlahOrang">0</span> orang</div>
       <div class="nilai angka" id="totalSemua">Rp 0</div>
     </div>
-    <button class="tombol-cetak" onclick="window.print()">🖨️ Cetak PDF</button>
+    <button class="tombol-cetak" onclick="cetak('rangkuman')" title="Rangkuman sebulan, 1 lembar A4 — enak buat arsip / dikirim WA">📄 Rangkuman</button>
+    <button class="tombol-cetak utama" onclick="cetak('nota')" title="Nota gaji per karyawan">🧾 Nota</button>
   </div>
 </div>
 
@@ -681,6 +737,7 @@
      selektor CSS biasa, jadi ditulis ulang ke sini tiap ganti ukuran kertas -->
 <style id="gayaKertas"></style>
 <div class="halaman-cetak" id="halamanCetak"></div>
+<div class="halaman-rangkuman" id="halamanRangkuman"></div>
 
 <!-- ===== MODAL ===== -->
 <div class="modal-lapis" id="modalLapis" hidden>
@@ -1271,6 +1328,7 @@ function render(){
     : '';
 
   renderCetak();
+  renderRangkuman();
 }
 
 function escapeHtml(s){
@@ -1297,16 +1355,37 @@ function ukuranKertasDipakai(){
   const el = document.getElementById('ukuranKertas');
   return KERTAS[el && el.value] ? el.value : 'a4';
 }
+
+/* dokumen yang lagi disiapkan buat dicetak: 'nota' atau 'rangkuman' */
+let modeCetak = 'nota';
+
 function terapkanKertas(){
-  const k = KERTAS[ukuranKertasDipakai()];
+  // rangkuman selalu A4 berdiri apa adanya, nggak ikut setelan kertas nota
+  const k = (modeCetak === 'rangkuman')
+    ? { ukuran:'A4 portrait', margin:'12mm', zoom:1 }
+    : KERTAS[ukuranKertasDipakai()];
   document.getElementById('gayaKertas').textContent =
     `@media print{
        @page{size:${k.ukuran};margin:${k.margin}}
        .halaman-cetak{zoom:${k.zoom.toFixed(4)}}
      }`;
   const ket = document.getElementById('ketKertas');
-  if(ket) ket.textContent = k.ket;
+  if(ket) ket.textContent = KERTAS[ukuranKertasDipakai()].ket;
 }
+
+function cetak(mode){
+  modeCetak = (mode === 'rangkuman') ? 'rangkuman' : 'nota';
+  document.body.dataset.cetak = modeCetak;
+  terapkanKertas();
+  setTimeout(()=>window.print(), 40);   // kasih jeda biar gaya barunya kepasang dulu
+}
+// balik ke setelan nota begitu jendela print ditutup
+window.addEventListener('afterprint', ()=>{
+  if(modeCetak === 'nota') return;
+  modeCetak = 'nota';
+  document.body.dataset.cetak = 'nota';
+  terapkanKertas();
+});
 
 /* ---------- navigasi karyawan (strip tab + panel ringkasan kanan) ---------- */
 function renderNavigasi(ringkasan){
@@ -1503,6 +1582,144 @@ function renderCetak(){
         Palembang, __________<br>Diperiksa,
         <div class="garis-ttd">( ________________ )</div>
       </div>
+    </div>`;
+}
+
+/* ---------- rangkuman gaji sebulan (1 lembar A4) ---------- */
+function renderRangkuman(){
+  const per  = document.getElementById('periode').value || '';
+  const toko = document.getElementById('namaToko').value || 'Daftar Gaji';
+  const hariIni = tglHariIni().split('-');
+
+  let tPokok=0, tTambahan=0, tPotongan=0, tAkhir=0,
+      tKerajinan=0, tLembur=0, tInsentif=0, tPotOff=0, tPotLain=0, tPotKasbon=0,
+      tSisaUtang=0;
+  const rincianKasbon = [], catatanLain = [];
+
+  const orang = data.karyawan.map((k,i)=>{
+    const h = hitungSatu(k);
+    const tambahan = h.kerajinanDapat + (k.lembur||0) + (k.insentif||0);
+    const potongan = h.potonganOff + h.potonganLain + h.potongKasbon;
+    tPokok+=k.gajiPokok||0; tTambahan+=tambahan; tPotongan+=potongan; tAkhir+=h.total;
+    tKerajinan+=h.kerajinanDapat; tLembur+=k.lembur||0; tInsentif+=k.insentif||0;
+    tPotOff+=h.potonganOff; tPotLain+=h.potonganLain; tPotKasbon+=h.potongKasbon;
+    tSisaUtang+=h.sisaSesudah;
+
+    if(h.totalUtang > 0) rincianKasbon.push({ nama:k.nama, ...h });
+    const lain = (k.potonganLain||[]).filter(p=>p.jumlah>0);
+    if(lain.length) catatanLain.push(
+      `<b>${escapeHtml(k.nama||'Tanpa nama')}:</b> ` +
+      lain.map(p=>`${escapeHtml(p.ket||'Potongan lain')} ${titikRibuan(p.jumlah)}`).join(' · '));
+
+    return { k, h, i, tambahan, potongan };
+  });
+
+  const jumlahBaris = (isi)=>`<tr class="jumlah">${isi}</tr>`;
+
+  document.getElementById('halamanRangkuman').innerHTML = `
+    <div class="rk-kop">
+      <div>
+        <h2>${escapeHtml(toko)}</h2>
+        <div class="doc">RANGKUMAN GAJI BULANAN</div>
+        <div class="periode">Periode: ${escapeHtml(labelPeriode(per))}</div>
+      </div>
+      <div class="kanan">
+        Dicetak: ${parseInt(hariIni[2],10)} ${BULAN[parseInt(hariIni[1],10)-1]} ${hariIni[0]}<br>
+        Jumlah karyawan: <b>${data.karyawan.length} orang</b>
+      </div>
+    </div>
+
+    <div class="rk-kpi">
+      <div><div class="label">Total gaji dibayar</div><div class="nilai">${keRupiah(tAkhir)}</div></div>
+      <div><div class="label">Potongan kasbon</div><div class="nilai">${keRupiah(tPotKasbon)}</div></div>
+      <div><div class="label">Potongan lain</div><div class="nilai">${keRupiah(tPotLain)}</div></div>
+      <div><div class="label">Sisa utang semua</div><div class="nilai">${keRupiah(tSisaUtang)}</div></div>
+    </div>
+
+    <div class="rk-judul">A. Ringkasan gaji per karyawan</div>
+    <table class="rk">
+      <colgroup><col style="width:6%"><col style="width:29%"><col style="width:16%">
+        <col style="width:15%"><col style="width:15%"><col style="width:19%"></colgroup>
+      <thead><tr>
+        <th>No</th><th style="text-align:left">Nama</th><th>Gaji Pokok<br>(Rp)</th>
+        <th>Tambahan<br>(Rp)</th><th>Potongan<br>(Rp)</th><th>GAJI DITERIMA<br>(Rp)</th>
+      </tr></thead>
+      <tbody>
+        ${orang.map(o=>`<tr>
+          <td class="tengah">${o.i+1}</td>
+          <td class="kiri">${escapeHtml(o.k.nama||'Tanpa nama')}</td>
+          <td>${titikRibuan(o.k.gajiPokok||0)}</td>
+          <td>${o.tambahan?'+ '+titikRibuan(o.tambahan):'0'}</td>
+          <td>${o.potongan?'− '+titikRibuan(o.potongan):'0'}</td>
+          <td class="terima">${o.h.total<0?'-':''}${titikRibuan(Math.abs(o.h.total))}</td>
+        </tr>`).join('')}
+        ${jumlahBaris(`
+          <td colspan="2" class="kiri">JUMLAH</td>
+          <td>${titikRibuan(tPokok)}</td>
+          <td>+ ${titikRibuan(tTambahan)}</td>
+          <td>− ${titikRibuan(tPotongan)}</td>
+          <td class="terima">${tAkhir<0?'-':''}${titikRibuan(Math.abs(tAkhir))}</td>`)}
+      </tbody>
+    </table>
+
+    <div class="rk-blok">
+      <div class="rk-judul">B. Rincian tambahan &amp; potongan</div>
+      <table class="rk kecil">
+        <colgroup><col style="width:23%"><col style="width:11%"><col style="width:11%"><col style="width:11%">
+          <col style="width:7%"><col style="width:12%"><col style="width:12%"><col style="width:13%"></colgroup>
+        <thead><tr>
+          <th style="text-align:left">Nama</th><th>Kerajinan</th><th>Lembur</th><th>Insentif</th>
+          <th>Off<br>(hari)</th><th>Pot. Off</th><th>Pot. Lain</th><th>Pot. Kasbon</th>
+        </tr></thead>
+        <tbody>
+          ${orang.map(o=>`<tr>
+            <td class="kiri">${escapeHtml(o.k.nama||'Tanpa nama')}</td>
+            <td>${titikRibuan(o.h.kerajinanDapat)}</td>
+            <td>${titikRibuan(o.k.lembur||0)}</td>
+            <td>${titikRibuan(o.k.insentif||0)}</td>
+            <td class="tengah">${o.k.offDay||0}</td>
+            <td>${titikRibuan(o.h.potonganOff)}</td>
+            <td>${titikRibuan(o.h.potonganLain)}</td>
+            <td>${titikRibuan(o.h.potongKasbon)}</td>
+          </tr>`).join('')}
+          ${jumlahBaris(`
+            <td class="kiri">JUMLAH</td>
+            <td>${titikRibuan(tKerajinan)}</td>
+            <td>${titikRibuan(tLembur)}</td>
+            <td>${titikRibuan(tInsentif)}</td>
+            <td></td>
+            <td>${titikRibuan(tPotOff)}</td>
+            <td>${titikRibuan(tPotLain)}</td>
+            <td>${titikRibuan(tPotKasbon)}</td>`)}
+        </tbody>
+      </table>
+      ${catatanLain.length ? `<div class="rk-catatan">Rincian potongan lain — ${catatanLain.join(' &nbsp;|&nbsp; ')}</div>` : ''}
+    </div>
+
+    ${rincianKasbon.length ? `
+    <div class="rk-blok">
+      <div class="rk-judul">C. Kartu utang / kasbon</div>
+      <table class="rk kecil">
+        <colgroup><col style="width:28%"><col style="width:18%"><col style="width:18%"><col style="width:18%"><col style="width:18%"></colgroup>
+        <thead><tr>
+          <th style="text-align:left">Nama</th><th>Total Utang</th>
+          <th>Dibayar s/d<br>Bulan Lalu</th><th>Potongan<br>Bulan Ini</th><th>Sisa Utang</th>
+        </tr></thead>
+        <tbody>
+          ${rincianKasbon.map(r=>`<tr>
+            <td class="kiri">${escapeHtml(r.nama||'Tanpa nama')}</td>
+            <td>${titikRibuan(r.totalUtang)}</td>
+            <td>${titikRibuan(r.sudahDibayar)}</td>
+            <td>${titikRibuan(r.potongKasbon)}</td>
+            <td class="terima">${titikRibuan(r.sisaSesudah)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>` : ''}
+
+    <div class="rk-ttd">
+      <div class="blok">Dibuat oleh,<div class="garis">( ______________ )</div></div>
+      <div class="blok">Palembang, ____________<br>Pemilik,<div class="garis">( ______________ )</div></div>
     </div>`;
 }
 
