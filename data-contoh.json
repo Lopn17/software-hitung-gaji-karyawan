@@ -15,6 +15,10 @@
       "insentif": 250000,
       "offDay": 7,
       "tarifOff": 150000,
+      "potonganLain": [
+        { "ket": "Kosan", "jumlah": 500000 },
+        { "ket": "Listrik", "jumlah": 75000 }
+      ],
       "utang": [
         { "tanggal": "2026-01-10", "jumlah": 5000000, "ket": "Pinjam buat motor" },
         { "tanggal": "2026-03-22", "jumlah": 1000000, "ket": "Kasbon berobat" }
@@ -34,6 +38,9 @@
       "insentif": 0,
       "offDay": 2,
       "tarifOff": 0,
+      "potonganLain": [
+        { "ket": "Kosan", "jumlah": 400000 }
+      ],
       "utang": [
         { "tanggal": "2026-08-05", "jumlah": 200000, "ket": "Kasbon" }
       ],

@@ -275,6 +275,21 @@
   }
   .stepper input:focus{outline:none}
 
+  /* ===== POTONGAN LAIN (kosan dll) ===== */
+  .potongan-blok{
+    border:2px solid var(--garis);border-radius:10px;padding:10px 12px;
+    display:grid;gap:8px;background:#FCFBF7;
+  }
+  .baris-potongan{display:flex;gap:8px;align-items:center}
+  .baris-potongan input.ket-potongan{
+    flex:1;min-width:0;border:2px solid var(--garis);border-radius:8px;padding:8px 10px;
+    font-family:inherit;font-size:13.5px;font-weight:600;background:var(--putih);color:var(--tinta);
+  }
+  .baris-potongan .uang-wrap{width:142px;flex-shrink:0}
+  .baris-potongan .uang-wrap input{padding:8px 10px 8px 34px;font-size:14.5px}
+  .baris-potongan .uang-wrap .rp{left:9px;font-size:12px}
+  .potongan-saran{display:flex;gap:6px;flex-wrap:wrap}
+
   /* ===== BLOK KASBON / UTANG ===== */
   .utang-blok{border:2px solid var(--garis);border-radius:10px;padding:12px;display:grid;gap:10px;background:#FCFBF7}
   .utang-atas{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
@@ -867,6 +882,8 @@ function migrasiData(d){
     k.insentif     = k.insentif||0;
     k.offDay       = k.offDay||0;
     k.tarifOff     = k.tarifOff||0;   // 0 = ikut pengaturan
+    // potongan rutin tiap bulan: kosan, listrik, dll
+    if(!Array.isArray(k.potonganLain)) k.potonganLain = [];
     k.potongKasbon = k.potongKasbon||0;
     k.cicilanRutin = k.cicilanRutin||0;
   });
@@ -1005,11 +1022,14 @@ function hitungSatu(k){
   const potongKasbon = Math.min(k.potongKasbon||0, sisaSebelum);   // nggak boleh lebih dari sisa utang
   const sisaSesudah  = sisaSebelum - potongKasbon;
 
+  const daftarLain = (Array.isArray(k.potonganLain)?k.potonganLain:[]);
+  const potonganLain = daftarLain.reduce((a,b)=>a+(b.jumlah||0),0);
+
   const pemasukan = (k.gajiPokok||0) + kerajinanDapat + (k.lembur||0) + (k.insentif||0);
-  const sebelumKasbon = pemasukan - potonganOff;
+  const sebelumKasbon = pemasukan - potonganOff - potonganLain;
   const total = sebelumKasbon - potongKasbon;
 
-  return { offLebih, potonganOff, tarif, kerajinanHangus, kerajinanDapat,
+  return { offLebih, potonganOff, tarif, kerajinanHangus, kerajinanDapat, potonganLain,
            totalUtang, sudahDibayar, sisaSebelum, potongKasbon, sisaSesudah,
            pemasukan, sebelumKasbon, total };
 }
@@ -1098,6 +1118,31 @@ function render(){
             <div class="field-ket">${k.tarifOff
               ? `Khusus ${escapeHtml(k.nama||'karyawan ini')}. Kosongkan kalau mau ikut pengaturan.`
               : `Ikut pengaturan (${keRupiah(tarifBawaan)}). Isi kalau orang ini beda.`}</div>
+          </div>
+
+          <div class="field" style="grid-column:1 / -1">
+            <label>Potongan lain <small class="jatah-info">(kosan, listrik, dll)</small></label>
+            <div class="potongan-blok">
+              ${k.potonganLain.length === 0
+                ? '<div class="kosong-kecil">Belum ada potongan lain.</div>'
+                : k.potonganLain.map((p,j)=>`
+                  <div class="baris-potongan">
+                    <input class="ket-potongan" type="text" placeholder="Keterangan (mis. Kosan)"
+                           value="${escapeHtml(p.ket||'')}" onchange="ubahPotongan(${i},${j},'ket',this.value)">
+                    <div class="uang-wrap"><span class="rp">Rp</span>
+                      <input type="text" inputmode="numeric" value="${p.jumlah?titikRibuan(p.jumlah):''}"
+                             placeholder="0" oninput="formatUangInput(this)"
+                             onchange="ubahPotongan(${i},${j},'jumlah',this.value)">
+                    </div>
+                    <button class="hapus-kecil" title="Hapus potongan" onclick="hapusPotongan(${i},${j})">✕</button>
+                  </div>`).join('')}
+              <div class="potongan-saran">
+                <button class="chip" onclick="tambahPotongan(${i},'Kosan')">+ Kosan</button>
+                <button class="chip netral" onclick="tambahPotongan(${i},'')">+ Potongan lain</button>
+              </div>
+              ${h.potonganLain>0?`<div class="total-kecil angka"><span>Total potongan lain</span><span>− ${keRupiah(h.potonganLain)}</span></div>`:''}
+            </div>
+            <div class="field-ket">Potongan ini ikut kepakai tiap bulan sampai dihapus, jadi nggak usah diisi ulang tiap gajian.</div>
           </div>
 
           <div class="field" style="grid-column:1 / -1">
@@ -1194,6 +1239,9 @@ function render(){
             ${(k.insentif||0)>0?`<div class="r"><span>Insentif</span><span class="plus">+ ${keRupiah(k.insentif)}</span></div>`:''}
             <div class="r"><span>Potongan off (${h.offLebih} × ${keRupiah(h.tarif)})${k.tarifOff?' <span class="tanda-khusus">khusus</span>':''}</span>
               <span class="${h.potonganOff>0?'minus':''}">− ${keRupiah(h.potonganOff)}</span></div>
+            ${k.potonganLain.filter(p=>p.jumlah>0).map(p=>`
+            <div class="r"><span>${escapeHtml(p.ket||'Potongan lain')}</span>
+              <span class="minus">− ${keRupiah(p.jumlah)}</span></div>`).join('')}
             <div class="r"><span>Potongan kasbon</span>
               <span class="${h.potongKasbon>0?'minus':''}">− ${keRupiah(h.potongKasbon)}</span></div>
             <div class="r total"><span>Gaji diterima</span>
@@ -1396,6 +1444,9 @@ function renderCetak(){
     if(k.lembur)   baris.push(['Uang lembur', titikRibuan(k.lembur)]);
     if(k.insentif) baris.push(['Insentif', titikRibuan(k.insentif)]);
     if(h.potonganOff)  baris.push([`Potongan off (${h.offLebih} × ${titikRibuan(h.tarif)})`, '− ' + titikRibuan(h.potonganOff)]);
+    (k.potonganLain||[]).forEach(p=>{
+      if(p.jumlah > 0) baris.push([escapeHtml(p.ket || 'Potongan lain'), '− ' + titikRibuan(p.jumlah)]);
+    });
     if(h.potongKasbon) baris.push(['Potongan kasbon', '− ' + titikRibuan(h.potongKasbon)]);
 
     return `
@@ -1475,6 +1526,40 @@ function setPotong(i, nilai){
   simpanDanHitung();
 }
 
+/* potongan lain (kosan dll) — bertahan tiap bulan, nggak dikosongkan pas tutup bulan */
+function tambahPotongan(i, ket){
+  data.karyawan[i].potonganLain.push({ ket: ket || '', jumlah: 0 });
+  simpanDanHitung();
+  // langsung fokus ke kolom yang perlu diisi
+  setTimeout(()=>{
+    const kartu = document.getElementById('kartu-' + data.karyawan[i].id);
+    if(!kartu) return;
+    const baris = kartu.querySelectorAll('.baris-potongan');
+    const akhir = baris[baris.length-1];
+    if(!akhir) return;
+    const sasaran = ket ? akhir.querySelector('.uang-wrap input') : akhir.querySelector('.ket-potongan');
+    if(sasaran) sasaran.focus();
+  }, 50);
+}
+function ubahPotongan(i, j, kunci, nilai){
+  if(kunci === 'jumlah') data.karyawan[i].potonganLain[j].jumlah = keAngka(nilai);
+  else data.karyawan[i].potonganLain[j].ket = nilai;
+  simpanDanHitung();
+}
+async function hapusPotongan(i, j){
+  const p = data.karyawan[i].potonganLain[j];
+  if(p.jumlah > 0 || p.ket){
+    const ok = await modalTanya({
+      judul:'Hapus potongan ini?', ikon:'🗑️',
+      isi:`<b>${escapeHtml(p.ket || 'Potongan lain')}</b> sebesar <b>${keRupiah(p.jumlah||0)}</b> nggak akan dipotong lagi mulai bulan ini.`,
+      ok:'Hapus', batal:'Batal', bahaya:true
+    });
+    if(!ok) return;
+  }
+  data.karyawan[i].potonganLain.splice(j,1);
+  simpanDanHitung();
+}
+
 /* utang */
 function tambahUtang(i){
   data.karyawan[i].utang.push({ tanggal: tglHariIni(), jumlah: 0, ket:'' });
@@ -1536,7 +1621,8 @@ async function hapusCicilan(i, j){
 /* karyawan */
 function tambahKaryawan(){
   data.karyawan.push({ id:idBaru(), nama:'', gajiPokok:0, kerajinan:0, lembur:0, insentif:0,
-                       offDay:0, tarifOff:0, utang:[], cicilan:[], potongKasbon:0, cicilanRutin:0 });
+                       offDay:0, tarifOff:0, potonganLain:[], utang:[], cicilan:[],
+                       potongKasbon:0, cicilanRutin:0 });
   simpanDanHitung();
   setTimeout(()=>{
     const semua = document.querySelectorAll('.kartu-atas input.nama');
@@ -1583,7 +1669,7 @@ async function tutupBulan(){
       `<ul>
         <li>Periode pindah ke <b>${labelPeriode(periodeGeser(per,1))}</b></li>
         <li>Hari off, lembur, insentif, dan kolom "potong bulan ini" dikosongkan</li>
-        <li>Gaji pokok, kerajinan, dan sisa utang tetap</li>
+        <li>Gaji pokok, kerajinan, potongan lain (kosan dll), dan sisa utang tetap</li>
       </ul>
       <div class="tegas" style="margin-top:10px">Pastikan PDF bulan ini sudah dicetak dulu ya. Masih bisa dibatalkan lewat tombol "Batalkan tutup bulan".</div>`,
     ok:'Ya, tutup bulan', batal:'Belum'
