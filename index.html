@@ -352,15 +352,17 @@
     font-size:14px;display:grid;gap:8px;
   }
   .rincian .r{display:flex;justify-content:space-between;gap:10px}
-  .rincian .r span:first-child{color:var(--abu);font-weight:600}
-  .rincian .r span:last-child{font-weight:700}
+  /* pakai '>' biar cuma kena span label langsung — kalau nggak, badge "khusus"
+     di dalamnya ikut kewarnain abu dan jadi nggak kebaca di atas oranye */
+  .rincian .r > span:first-child{color:var(--abu);font-weight:600}
+  .rincian .r > span:last-child{font-weight:700}
   .rincian .r .minus{color:var(--merah);font-weight:800}
   .rincian .r .plus{color:var(--hijau);font-weight:800}
   .rincian .r.total{
     border-top:2px solid var(--garis-kuat);padding-top:10px;margin-top:2px;
     font-weight:800;font-size:16.5px;
   }
-  .rincian .r.total span:first-child{color:var(--tinta);font-weight:800}
+  .rincian .r.total > span:first-child{color:var(--tinta);font-weight:800}
   .rincian .r.total .negatif{color:var(--merah)}
   .rincian .sisa-note{font-size:12.5px;color:var(--abu);text-align:right;margin-top:-2px;font-weight:600}
   .catatan-hangus{font-size:12px;color:var(--amber);font-weight:700}
@@ -1339,13 +1341,27 @@ function tandaiTabAktif(){
     if(r) r.classList.toggle('aktif', k.id === aktif);
   });
 
-  // geser strip biar tab yang aktif kelihatan
+  // geser strip (HP) biar tab yang aktif kelihatan
   const tAktif = document.getElementById('tab-' + aktif);
   const isi = document.getElementById('stripTabIsi');
   if(tAktif && isi){
     const kiri = tAktif.offsetLeft - isi.offsetWidth/2 + tAktif.offsetWidth/2;
     isi.scrollTo({ left: Math.max(0, kiri), behavior:'smooth' });
   }
+
+  // gulung daftar di panel kanan (desktop) biar orang yang lagi dibuka selalu kelihatan
+  jagaTerlihat(document.getElementById('rel-' + aktif));
+}
+
+/* geser isi daftar seperlunya aja, jangan sampai halaman ikut kegeser */
+function jagaTerlihat(el){
+  if(!el) return;
+  const kotak = el.parentElement;                       // .rel-daftar
+  if(!kotak || kotak.scrollHeight <= kotak.clientHeight) return;
+  const a = el.getBoundingClientRect(), b = kotak.getBoundingClientRect();
+  const sela = 6;
+  if(a.top < b.top + sela)            kotak.scrollTop -= (b.top + sela - a.top);
+  else if(a.bottom > b.bottom - sela) kotak.scrollTop += (a.bottom - b.bottom + sela);
 }
 window.addEventListener('scroll', ()=>{
   if(tandaiMenunggu) return;
