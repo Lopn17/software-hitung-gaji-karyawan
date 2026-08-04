@@ -8,15 +8,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --hijau:#0E5E4A;
-    --hijau-tua:#093F31;
-    --kertas:#F5F4EE;
+    --hijau:#0B5340;
+    --hijau-tua:#07382C;
+    --hijau-muda:#EAF1EE;   /* latar lembut buat judul kartu */
+    /* latar halaman sengaja lebih tua dari kartu putih, biar tiap kartu kelihatan
+       "terangkat" walau di layar resolusi rendah / kontras rendah */
+    --kertas:#E8E5DA;
     --putih:#FFFFFF;
-    --tinta:#1B1F24;
-    --abu:#6B7280;
-    --garis:#E2E0D8;
-    --amber:#B45309;
-    --merah:#B91C1C;
+    --tinta:#12161B;
+    --abu:#4F5865;          /* lebih gelap dari #6B7280 → tulisan kecil kebaca */
+    --garis:#C7C2B0;        /* garis dalam (antar baris) */
+    --garis-kuat:#8E886F;   /* garis luar kartu */
+    --amber:#8F4106;
+    --merah:#A31515;
     --radius:14px;
   }
   *{margin:0;padding:0;box-sizing:border-box}
@@ -25,7 +29,7 @@
     font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
     background:var(--kertas);
     color:var(--tinta);
-    font-size:15px;
+    font-size:15.5px;
     padding-bottom:140px;
   }
   .angka{font-variant-numeric:tabular-nums}
@@ -48,77 +52,103 @@
 
   main{max-width:680px;margin:0 auto;padding:16px}
 
+  /* ===== SPANDUK MODE CONTOH ===== */
+  .spanduk-contoh{
+    display:flex;align-items:center;gap:12px;
+    background:#FDF0DC;border:2px solid var(--amber);border-radius:var(--radius);
+    padding:12px 14px;margin-bottom:16px;color:var(--amber);
+  }
+  .spanduk-contoh[hidden]{display:none}
+  .spanduk-contoh b{display:block;font-size:13.5px;font-weight:800}
+  .spanduk-contoh small{display:block;font-size:12px;font-weight:500;color:#6B4A22;margin-top:3px;line-height:1.45}
+  .spanduk-contoh button{
+    flex-shrink:0;background:var(--amber);color:#fff;border:none;border-radius:10px;
+    padding:11px 14px;font-family:inherit;font-size:13.5px;font-weight:800;cursor:pointer;
+  }
+
   /* ===== PENGATURAN ===== */
   details.pengaturan{
-    background:var(--putih);border:1px solid var(--garis);
-    border-radius:var(--radius);margin-bottom:14px;overflow:hidden;
+    background:var(--putih);border:2px solid var(--garis-kuat);
+    border-radius:var(--radius);margin-bottom:16px;overflow:hidden;
+    box-shadow:0 2px 0 rgba(0,0,0,.10);
   }
+  details.pengaturan[open] summary{border-bottom:2px solid var(--garis-kuat);background:var(--hijau-muda)}
   details.pengaturan summary{
-    padding:13px 16px;font-weight:700;font-size:14px;cursor:pointer;
+    padding:13px 16px;font-weight:800;font-size:14.5px;cursor:pointer;
     list-style:none;display:flex;justify-content:space-between;align-items:center;
     -webkit-user-select:none;user-select:none;
   }
   details.pengaturan summary::after{content:"▾";color:var(--abu);transition:transform .2s}
   details.pengaturan[open] summary::after{transform:rotate(180deg)}
-  .pengaturan-body{padding:0 16px 16px;display:grid;gap:12px}
-  .field label{display:block;font-size:12.5px;font-weight:600;color:var(--abu);margin-bottom:5px}
-  .field input[type=text]{
-    width:100%;border:1.5px solid var(--garis);border-radius:10px;
-    padding:11px 12px;font-family:inherit;font-size:16px;font-weight:600;
-    background:var(--putih);
+  .pengaturan-body{padding:14px 16px 16px;display:grid;gap:14px}
+  .field label{display:block;font-size:13.5px;font-weight:700;color:var(--tinta);margin-bottom:5px}
+  .field label .jatah-info{font-weight:600;color:var(--abu)}
+  .field-ket{font-size:12px;color:var(--abu);margin-top:5px;line-height:1.45;font-weight:500}
+  .tanda-khusus{
+    font-size:10.5px;font-weight:800;color:#fff;background:var(--amber);
+    border-radius:5px;padding:2px 5px;margin-left:3px;white-space:nowrap;
   }
-  .field input:focus{outline:2px solid var(--hijau);outline-offset:0;border-color:var(--hijau)}
-  .toggle-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
-  .toggle-row .keterangan{font-size:13px;font-weight:600}
-  .toggle-row .keterangan small{display:block;font-weight:400;color:var(--abu);font-size:11.5px;margin-top:2px}
-  .saklar{position:relative;width:46px;height:26px;flex-shrink:0}
+  .field input[type=text]{
+    width:100%;border:2px solid var(--garis);border-radius:10px;
+    padding:11px 12px;font-family:inherit;font-size:16px;font-weight:700;
+    background:var(--putih);color:var(--tinta);
+  }
+  .field input:focus{outline:2.5px solid var(--hijau);outline-offset:0;border-color:var(--hijau)}
+  .toggle-row{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    background:#F7F5EC;border:2px solid var(--garis);border-radius:10px;padding:11px 12px;
+  }
+  .toggle-row .keterangan{font-size:13.5px;font-weight:700}
+  .toggle-row .keterangan small{display:block;font-weight:500;color:var(--abu);font-size:12px;margin-top:3px;line-height:1.45}
+  .saklar{position:relative;width:48px;height:28px;flex-shrink:0}
   .saklar input{opacity:0;width:0;height:0}
   .saklar span{
-    position:absolute;inset:0;background:#C9C7BE;border-radius:26px;cursor:pointer;transition:.2s;
+    position:absolute;inset:0;background:#A9A493;border-radius:28px;cursor:pointer;transition:.2s;
   }
   .saklar span::before{
-    content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;
-    background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25);
+    content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;
+    background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.35);
   }
   .saklar input:checked + span{background:var(--hijau)}
   .saklar input:checked + span::before{transform:translateX(20px)}
 
-  .backup-blok{border-top:1px solid var(--garis);padding-top:14px;margin-top:2px}
-  .backup-judul{font-size:12.5px;font-weight:600;color:var(--abu);margin-bottom:8px}
+  .backup-blok{border-top:2px solid var(--garis);padding-top:14px;margin-top:2px}
+  .backup-judul{font-size:13.5px;font-weight:700;color:var(--tinta);margin-bottom:8px}
   .backup-tombol-baris{display:flex;gap:10px}
   .tombol-backup{
-    flex:1;border:1.5px solid var(--hijau);border-radius:10px;background:transparent;
-    color:var(--hijau);font-family:inherit;font-size:13.5px;font-weight:700;
-    padding:10px 8px;cursor:pointer;
+    flex:1;border:2px solid var(--hijau);border-radius:10px;background:transparent;
+    color:var(--hijau);font-family:inherit;font-size:14px;font-weight:700;
+    padding:11px 8px;cursor:pointer;
   }
-  .tombol-backup:active{background:rgba(14,94,74,.08)}
-  .backup-ket{font-size:11.5px;color:var(--abu);margin-top:8px;line-height:1.5}
+  .tombol-backup:active{background:rgba(11,83,64,.10)}
+  .backup-ket{font-size:12px;color:var(--abu);margin-top:9px;line-height:1.5;font-weight:500}
 
   /* ===== KARTU KARYAWAN ===== */
   .kartu{
-    background:var(--putih);border:1px solid var(--garis);
-    border-radius:var(--radius);margin-bottom:14px;overflow:hidden;
+    background:var(--putih);border:2px solid var(--garis-kuat);
+    border-radius:var(--radius);margin-bottom:16px;overflow:hidden;
+    box-shadow:0 2px 0 rgba(0,0,0,.10);
   }
   .kartu-atas{
-    display:flex;align-items:center;gap:10px;padding:14px 16px;
-    border-bottom:1px dashed var(--garis);
+    display:flex;align-items:center;gap:10px;padding:13px 16px;
+    background:var(--hijau-muda);border-bottom:2px solid var(--garis-kuat);
   }
   .kartu-atas .nomor{
-    width:26px;height:26px;border-radius:50%;background:var(--hijau);color:#fff;
-    font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;
+    width:28px;height:28px;border-radius:50%;background:var(--hijau);color:#fff;
+    font-size:13.5px;font-weight:800;display:flex;align-items:center;justify-content:center;
     flex-shrink:0;
   }
   .kartu-atas input.nama{
-    flex:1;border:none;border-bottom:1.5px dashed var(--garis);font-family:inherit;font-size:16.5px;font-weight:800;
+    flex:1;border:none;border-bottom:2px solid var(--garis);font-family:inherit;font-size:17px;font-weight:800;
     color:var(--tinta);background:transparent;min-width:0;letter-spacing:-.01em;padding-bottom:3px;
   }
-  .kartu-atas input.nama:focus{outline:none;border-bottom:2px solid var(--hijau)}
+  .kartu-atas input.nama:focus{outline:none;border-bottom:2.5px solid var(--hijau)}
   .kartu-atas .ikon-edit{color:var(--abu);font-size:13px;flex-shrink:0;margin-right:-2px}
   .hapus{
-    background:none;border:none;color:var(--abu);font-size:20px;cursor:pointer;
-    padding:4px 6px;line-height:1;flex-shrink:0;
+    background:none;border:none;color:var(--abu);font-size:21px;cursor:pointer;
+    padding:4px 6px;line-height:1;flex-shrink:0;font-weight:700;
   }
-  .kartu-body{padding:14px 16px;display:grid;gap:12px}
+  .kartu-body{padding:14px 16px;display:grid;gap:13px}
   .baris-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
   .uang-wrap{position:relative}
@@ -127,17 +157,18 @@
     font-size:13px;font-weight:700;color:var(--abu);
   }
   .uang-wrap input{
-    width:100%;border:1.5px solid var(--garis);border-radius:10px;
-    padding:11px 12px 11px 40px;font-family:inherit;font-size:16px;font-weight:700;
-    background:var(--putih);text-align:right;
+    width:100%;border:2px solid var(--garis);border-radius:10px;
+    padding:11px 12px 11px 40px;font-family:inherit;font-size:16.5px;font-weight:700;
+    background:var(--putih);text-align:right;color:var(--tinta);
   }
+  .uang-wrap .rp{color:var(--abu)}
 
-  .stepper{display:flex;align-items:stretch;border:1.5px solid var(--garis);border-radius:10px;overflow:hidden}
+  .stepper{display:flex;align-items:stretch;border:2px solid var(--garis);border-radius:10px;overflow:hidden}
   .stepper button{
-    width:44px;border:none;background:var(--kertas);font-size:20px;font-weight:700;
+    width:46px;border:none;background:#EFECE1;font-size:21px;font-weight:800;
     color:var(--hijau);cursor:pointer;font-family:inherit;
   }
-  .stepper button:active{background:#E8E6DE}
+  .stepper button:active{background:#DFDBCB}
   .stepper input{
     flex:1;border:none;text-align:center;font-family:inherit;font-size:16px;
     font-weight:800;min-width:0;padding:11px 0;
@@ -145,33 +176,33 @@
   .stepper input:focus{outline:none}
 
   /* ===== BLOK KASBON / UTANG ===== */
-  .utang-blok{border:1.5px solid var(--garis);border-radius:10px;padding:12px;display:grid;gap:10px}
+  .utang-blok{border:2px solid var(--garis);border-radius:10px;padding:12px;display:grid;gap:10px;background:#FCFBF7}
   .utang-atas{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
-  .utang-label{font-size:11px;font-weight:600;color:var(--abu);text-transform:uppercase;letter-spacing:.05em}
-  .utang-nilai{font-size:19px;font-weight:800;letter-spacing:-.01em}
+  .utang-label{font-size:11.5px;font-weight:700;color:var(--abu);text-transform:uppercase;letter-spacing:.05em}
+  .utang-nilai{font-size:20px;font-weight:800;letter-spacing:-.01em}
   .utang-nilai.ada{color:var(--merah)}
   .utang-nilai.lunas{color:var(--hijau)}
-  .utang-kanan{text-align:right;font-size:12.5px;font-weight:700}
+  .utang-kanan{text-align:right;font-size:13px;font-weight:700}
   .utang-kanan .kecil{font-weight:600;color:var(--abu);font-size:12px}
-  .bar-progres{height:7px;border-radius:7px;background:#E8E6DE;overflow:hidden}
-  .bar-progres i{display:block;height:100%;background:var(--hijau);border-radius:7px}
-  .utang-catatan{font-size:11.5px;color:var(--abu);line-height:1.5}
-  .utang-catatan.warn{color:var(--amber);font-weight:600}
+  .bar-progres{height:9px;border-radius:9px;background:#DAD6C6;overflow:hidden;border:1px solid var(--garis)}
+  .bar-progres i{display:block;height:100%;background:var(--hijau);border-radius:9px}
+  .utang-catatan{font-size:12px;color:var(--abu);line-height:1.5;font-weight:500}
+  .utang-catatan.warn{color:var(--amber);font-weight:700}
 
   .potong-baris{display:grid;gap:6px}
-  .potong-baris > .judul{font-size:12.5px;font-weight:700}
+  .potong-baris > .judul{font-size:13.5px;font-weight:700}
   .chip-baris{display:flex;gap:6px;flex-wrap:wrap}
   .chip{
-    border:1.5px solid var(--garis);background:var(--putih);border-radius:20px;
-    padding:6px 11px;font-family:inherit;font-size:12px;font-weight:700;
+    border:2px solid var(--hijau);background:var(--putih);border-radius:20px;
+    padding:6px 11px;font-family:inherit;font-size:12.5px;font-weight:700;
     color:var(--hijau);cursor:pointer;
   }
-  .chip:active{background:rgba(14,94,74,.08)}
-  .chip.netral{color:var(--abu)}
+  .chip:active{background:rgba(11,83,64,.10)}
+  .chip.netral{color:var(--abu);border-color:var(--garis)}
 
-  details.lipat{border-top:1px dashed var(--garis);padding-top:9px}
+  details.lipat{border-top:2px solid var(--garis);padding-top:9px}
   details.lipat summary{
-    list-style:none;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--hijau);
+    list-style:none;cursor:pointer;font-size:13.5px;font-weight:700;color:var(--hijau);
     display:flex;justify-content:space-between;align-items:center;-webkit-user-select:none;user-select:none;
   }
   details.lipat summary::-webkit-details-marker{display:none}
@@ -179,98 +210,102 @@
   details.lipat[open] summary::after{transform:rotate(180deg)}
   .lipat-isi{display:grid;gap:8px;padding-top:9px}
 
-  .baris-catat{display:grid;gap:6px;border-bottom:1px dashed var(--garis);padding-bottom:8px}
+  .baris-catat{display:grid;gap:6px;border-bottom:1px solid var(--garis);padding-bottom:8px}
   .baris-catat:last-of-type{border-bottom:none;padding-bottom:0}
   .baris-catat .atas{display:flex;gap:8px;align-items:center}
   .baris-catat input[type=date]{
-    border:1px solid var(--garis);border-radius:8px;padding:8px 6px;
-    font-family:inherit;font-size:13px;font-weight:600;width:128px;flex-shrink:0;
+    border:2px solid var(--garis);border-radius:8px;padding:8px 6px;
+    font-family:inherit;font-size:13px;font-weight:700;width:132px;flex-shrink:0;
     background:var(--putih);color:var(--tinta);
   }
   .baris-catat .uang-wrap{flex:1;min-width:0}
   .baris-catat .uang-wrap input{padding:8px 10px 8px 36px;font-size:14.5px}
   .baris-catat .uang-wrap .rp{left:10px;font-size:12px}
   .baris-catat input.ket{
-    width:100%;border:1px solid var(--garis);border-radius:8px;padding:7px 10px;
-    font-family:inherit;font-size:12.5px;font-weight:500;background:var(--putih);
+    width:100%;border:2px solid var(--garis);border-radius:8px;padding:7px 10px;
+    font-family:inherit;font-size:13px;font-weight:600;background:var(--putih);color:var(--tinta);
   }
   .hapus-kecil{
-    background:none;border:none;color:var(--abu);font-size:16px;cursor:pointer;
-    padding:4px;line-height:1;flex-shrink:0;
+    background:none;border:none;color:var(--abu);font-size:17px;cursor:pointer;
+    padding:4px;line-height:1;flex-shrink:0;font-weight:700;
   }
   .tambah-kecil{
     background:none;border:none;color:var(--hijau);font-family:inherit;
-    font-size:13px;font-weight:700;cursor:pointer;text-align:left;padding:2px 0;
+    font-size:13.5px;font-weight:700;cursor:pointer;text-align:left;padding:2px 0;
   }
-  .kosong-kecil{font-size:12.5px;color:var(--abu)}
+  .kosong-kecil{font-size:13px;color:var(--abu);font-weight:500}
   .riwayat-baris{
     display:flex;justify-content:space-between;align-items:center;gap:8px;
-    font-size:13px;padding:7px 0;border-bottom:1px dashed var(--garis);
+    font-size:13.5px;padding:7px 0;border-bottom:1px solid var(--garis);
   }
   .riwayat-baris:last-child{border-bottom:none}
-  .riwayat-baris .kiri{color:var(--abu);font-size:12.5px;font-weight:600}
+  .riwayat-baris .kiri{color:var(--abu);font-size:13px;font-weight:600}
   .riwayat-baris .kanan{font-weight:700;display:flex;align-items:center;gap:4px}
   .total-kecil{
-    display:flex;justify-content:space-between;font-size:13px;font-weight:700;
-    border-top:1px dashed var(--garis);padding-top:8px;
+    display:flex;justify-content:space-between;font-size:13.5px;font-weight:800;
+    border-top:2px solid var(--garis);padding-top:8px;
   }
 
   /* ringkasan per karyawan */
   .rincian{
-    background:var(--kertas);border-radius:10px;padding:12px 14px;
-    font-size:13.5px;display:grid;gap:7px;
+    background:#F2EFE4;border:2px solid var(--garis);border-radius:10px;padding:12px 14px;
+    font-size:14px;display:grid;gap:8px;
   }
   .rincian .r{display:flex;justify-content:space-between;gap:10px}
-  .rincian .r span:first-child{color:var(--abu)}
-  .rincian .r .minus{color:var(--merah);font-weight:700}
-  .rincian .r .plus{color:var(--hijau);font-weight:700}
+  .rincian .r span:first-child{color:var(--abu);font-weight:600}
+  .rincian .r span:last-child{font-weight:700}
+  .rincian .r .minus{color:var(--merah);font-weight:800}
+  .rincian .r .plus{color:var(--hijau);font-weight:800}
   .rincian .r.total{
-    border-top:1.5px solid var(--garis);padding-top:9px;margin-top:2px;
-    font-weight:800;font-size:15.5px;
+    border-top:2px solid var(--garis-kuat);padding-top:10px;margin-top:2px;
+    font-weight:800;font-size:16.5px;
   }
+  .rincian .r.total span:first-child{color:var(--tinta);font-weight:800}
   .rincian .r.total .negatif{color:var(--merah)}
-  .rincian .sisa-note{font-size:11.5px;color:var(--abu);text-align:right;margin-top:-2px}
-  .catatan-hangus{font-size:11.5px;color:var(--amber);font-weight:600}
+  .rincian .sisa-note{font-size:12.5px;color:var(--abu);text-align:right;margin-top:-2px;font-weight:600}
+  .catatan-hangus{font-size:12px;color:var(--amber);font-weight:700}
 
   /* ===== BAR TOTAL BAWAH ===== */
   .bar-total{
     position:fixed;left:0;right:0;bottom:0;z-index:50;
-    background:var(--hijau-tua);color:#fff;
+    background:var(--hijau-tua);color:#fff;border-top:3px solid #052A21;
     padding:12px 16px calc(12px + env(safe-area-inset-bottom));
   }
   .bar-inner{max-width:680px;margin:0 auto;display:flex;align-items:center;gap:12px}
   .bar-info{flex:1;min-width:0}
-  .bar-info .label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.75;font-weight:600}
-  .bar-info .nilai{font-size:20px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar-info .label{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;opacity:.95;font-weight:700}
+  .bar-info .nilai{font-size:21px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .tombol-cetak{
     background:#fff;color:var(--hijau-tua);border:none;border-radius:10px;
-    padding:12px 18px;font-family:inherit;font-size:14.5px;font-weight:800;
+    padding:13px 18px;font-family:inherit;font-size:15px;font-weight:800;
     cursor:pointer;flex-shrink:0;
   }
   .tombol-cetak:active{transform:scale(.97)}
 
   /* ===== TOMBOL ===== */
   .tombol-tambah{
-    width:100%;padding:14px;border:2px dashed var(--hijau);border-radius:var(--radius);
-    background:transparent;color:var(--hijau);font-family:inherit;font-size:15px;
-    font-weight:700;cursor:pointer;margin-bottom:14px;
+    width:100%;padding:15px;border:2.5px dashed var(--hijau);border-radius:var(--radius);
+    background:var(--putih);color:var(--hijau);font-family:inherit;font-size:15.5px;
+    font-weight:800;cursor:pointer;margin-bottom:16px;
   }
-  .tombol-tambah:active{background:rgba(14,94,74,.08)}
+  .tombol-tambah:active{background:rgba(11,83,64,.10)}
   .tombol-tutup{
-    width:100%;padding:13px;border:1.5px solid var(--amber);border-radius:var(--radius);
-    background:transparent;color:var(--amber);font-family:inherit;font-size:14px;
-    font-weight:700;cursor:pointer;
+    width:100%;padding:14px;border:2px solid var(--amber);border-radius:var(--radius);
+    background:#FDF6EF;color:var(--amber);font-family:inherit;font-size:14.5px;
+    font-weight:800;cursor:pointer;
   }
-  .tombol-tutup:active{background:rgba(180,83,9,.08)}
+  .tombol-tutup:active{background:rgba(143,65,6,.12)}
   .tombol-batal{
-    width:100%;padding:11px;border:1.5px solid var(--garis);border-radius:var(--radius);
-    background:var(--putih);color:var(--abu);font-family:inherit;font-size:13px;
+    width:100%;padding:12px;border:2px solid var(--garis-kuat);border-radius:var(--radius);
+    background:var(--putih);color:var(--tinta);font-family:inherit;font-size:13.5px;
     font-weight:700;cursor:pointer;margin-top:8px;
   }
-  .tutup-ket{font-size:11.5px;color:var(--abu);text-align:center;margin-top:8px;line-height:1.5}
+  .tutup-ket{font-size:12px;color:var(--abu);text-align:center;margin-top:9px;line-height:1.55;font-weight:500}
 
   .kosong{
-    text-align:center;color:var(--abu);padding:30px 16px;font-size:14px;
+    text-align:center;color:var(--abu);padding:30px 16px;font-size:14.5px;font-weight:600;
+    background:var(--putih);border:2px dashed var(--garis-kuat);border-radius:var(--radius);
+    margin-bottom:16px;
   }
 
   /* ===== MODAL ===== */
@@ -335,49 +370,74 @@
   @keyframes toastMasuk{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
   @keyframes toastKeluar{to{opacity:0;transform:translateY(8px)}}
 
-  /* ===== CETAK / PRINT A4 MENDATAR (LANDSCAPE) ===== */
+  /* ===== CETAK: KERTAS NOTA 10,4 x 16,4 cm, BERDIRI (PORTRAIT) ===== */
   .halaman-cetak{display:none}
   @media print{
-    @page{size:A4 landscape;margin:9mm}
-    body{background:#fff;padding:0;font-size:13px}
+    @page{size:104mm 164mm;margin:5mm 5mm 6mm}
+    body{background:#fff;padding:0;font-size:12px}
     header,main,.bar-total{display:none !important}
-    .halaman-cetak{display:block;color:#000}
-
-    .cetak-kop{text-align:center;border-bottom:3px solid #000;padding-bottom:9px;margin-bottom:6px}
-    .cetak-kop h2{font-size:23px;font-weight:800;letter-spacing:.02em;text-transform:uppercase;line-height:1.15}
-    .cetak-kop .judul-doc{font-size:14px;color:#000;margin-top:3px;font-weight:600;letter-spacing:.06em}
-    .cetak-kop .periode{font-size:15px;margin-top:3px;font-weight:700}
-
-    table.cetak{width:100%;border-collapse:collapse;margin-top:9px;table-layout:fixed}
-    table.cetak th,table.cetak td{
-      border:1px solid #000;padding:10px 6px;text-align:right;
-      font-variant-numeric:tabular-nums;font-size:15.5px;line-height:1.25;
-      word-wrap:break-word;overflow-wrap:break-word;
+    /* lebar dikunci 94mm (= 104mm kertas − 2×5mm margin). Jadi kalaupun printer/dialog
+       kepilih kertas lain, isinya tetap muat di kertas nota dan nggak kepotong. */
+    .halaman-cetak{
+      display:block;color:#000;font-variant-numeric:tabular-nums;
+      width:94mm;max-width:94mm;margin:0;
     }
-    table.cetak th{
-      background:#E4E4E0;font-size:13px;text-align:center;font-weight:800;
-      line-height:1.3;padding:8px 4px;
-    }
-    table.cetak td.kiri{text-align:left;font-weight:700}
-    table.cetak td.tengah{text-align:center}
-    table.cetak td.terima{font-size:17.5px;font-weight:800}
-    table.cetak tbody tr:nth-child(even) td{background:#F6F6F3}
-    table.cetak tr.jumlah td{font-weight:800;background:#DCDCD6;font-size:14px;padding:9px 4px}
-    table.cetak tr.jumlah td.terima{font-size:15.5px}
-    /* kepala tabel ikut tercetak lagi di halaman kedua */
-    table.cetak thead{display:table-header-group}
-    table.cetak tr{page-break-inside:avoid}
 
-    .cetak-kasbon{margin-top:12px;page-break-inside:avoid}
-    .cetak-kasbon .judul-kasbon{font-size:15px;font-weight:800;margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em}
-    table.kasbon-detail th{font-size:12.5px}
-    table.kasbon-detail td{font-size:15px;padding:7px 8px}
+    /* kop nota */
+    .cetak-kop{text-align:center;border-bottom:2.5px solid #000;padding-bottom:4px;margin-bottom:6px}
+    .cetak-kop h2{font-size:15px;font-weight:800;letter-spacing:.01em;text-transform:uppercase;line-height:1.2}
+    .cetak-kop .judul-doc{font-size:11px;margin-top:1px;font-weight:600;letter-spacing:.06em}
+    .cetak-kop .periode{font-size:12.5px;margin-top:2px;font-weight:700}
 
-    .cetak-ttd{
-      display:flex;justify-content:flex-end;margin-top:14px;font-size:13px;page-break-inside:avoid;
+    /* satu blok per karyawan */
+    .slip{border:1.2px solid #000;padding:5px 7px 6px;margin-bottom:6px;page-break-inside:avoid}
+    .slip-nama{
+      display:flex;justify-content:space-between;gap:6px;align-items:baseline;
+      font-size:13.5px;font-weight:800;border-bottom:1.5px solid #000;
+      padding-bottom:3px;margin-bottom:3px;
     }
-    .cetak-ttd .blok{text-align:center;width:230px}
-    .cetak-ttd .garis-ttd{margin-top:38px;border-top:1.5px solid #000;padding-top:5px;font-weight:700}
+    .slip-nama .off{font-size:10.5px;font-weight:600;white-space:nowrap}
+    .slip .baris{
+      display:flex;justify-content:space-between;gap:8px;align-items:baseline;
+      font-size:12.5px;padding:2.5px 0;border-bottom:1px dotted #B0B0B0;
+    }
+    .slip .baris:last-child{border-bottom:none}
+    .slip .baris b{font-weight:700;white-space:nowrap}
+    .slip .baris.total{
+      border-bottom:none;border-top:1.5px solid #000;margin-top:3px;
+      padding-top:5px;font-size:13.5px;font-weight:800;
+    }
+    .slip .baris.total b{font-size:16px;font-weight:800}
+    .slip .sisa-utang{
+      display:flex;justify-content:space-between;gap:8px;
+      margin-top:4px;padding-top:4px;border-top:1px dashed #000;
+      font-size:11px;font-weight:700;
+    }
+    .slip .sisa-utang small{display:block;font-weight:500;font-size:9.5px}
+
+    /* total semua karyawan */
+    .cetak-jumlah{
+      display:flex;justify-content:space-between;gap:8px;align-items:baseline;
+      border-top:2px solid #000;border-bottom:2px solid #000;
+      padding:5px 2px;margin:2px 0 8px;font-size:12.5px;font-weight:800;
+    }
+    .cetak-jumlah b{font-size:15px}
+
+    /* kartu utang ringkas */
+    .cetak-kasbon{margin-top:8px;page-break-inside:avoid}
+    .cetak-kasbon .judul-kasbon{font-size:11.5px;font-weight:800;margin-bottom:3px;text-transform:uppercase;letter-spacing:.03em}
+    table.kasbon-detail{width:100%;border-collapse:collapse;table-layout:fixed}
+    table.kasbon-detail th,table.kasbon-detail td{
+      border:1px solid #000;padding:3px 4px;text-align:right;
+      font-size:11px;line-height:1.2;word-wrap:break-word;overflow-wrap:break-word;
+    }
+    table.kasbon-detail th{background:#E4E4E0;text-align:center;font-weight:800;font-size:9.5px}
+    table.kasbon-detail td.kiri{text-align:left;font-weight:700}
+    table.kasbon-detail td.sisa{font-weight:800}
+
+    .cetak-ttd{display:flex;justify-content:flex-end;margin-top:10px;font-size:11px;page-break-inside:avoid}
+    .cetak-ttd .blok{text-align:center;width:52mm}
+    .cetak-ttd .garis-ttd{margin-top:34px;border-top:1.2px solid #000;padding-top:3px;font-weight:700}
     .modal-lapis,.toast-wadah{display:none !important}
   }
 
@@ -402,6 +462,14 @@
 </header>
 
 <main>
+  <div class="spanduk-contoh" id="spandukContoh" hidden>
+    <div>
+      <b>MODE CONTOH — data dummy buat tes cetak</b>
+      <small>Data asli di HP/laptop ini tidak tersentuh dan tidak akan tertimpa. Semua yang diubah di sini hilang begitu halaman ditutup.</small>
+    </div>
+    <button type="button" onclick="window.print()">🖨️ Cetak</button>
+  </div>
+
   <details class="pengaturan">
     <summary>Pengaturan potongan</summary>
     <div class="pengaturan-body">
@@ -415,11 +483,12 @@
           </div>
         </div>
         <div class="field">
-          <label>Potongan per hari off lebih</label>
+          <label>Potongan per hari off (bawaan)</label>
           <div class="uang-wrap">
             <span class="rp">Rp</span>
             <input type="text" inputmode="numeric" id="potonganPerOff" value="100.000" oninput="formatUangInput(this)" onchange="simpanDanHitung()">
           </div>
+          <div class="field-ket">Dipakai kalau kolom potongan di kartu karyawan dikosongkan.</div>
         </div>
       </div>
       <div class="toggle-row">
@@ -486,6 +555,11 @@
 <script>
 const KUNCI = 'hitungGaji_v1';
 const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+/* Mode contoh: dibuka lewat tes-cetak.html (index.html?contoh=1).
+   Dipakai buat uji cetak — datanya cuma numpang di memori, TIDAK PERNAH
+   ditulis ke localStorage, jadi data asli di HP/laptop aman. */
+const MODE_CONTOH = /[?&]contoh=1/.test(location.search);
 
 let data = {
   karyawan: [
@@ -660,6 +734,7 @@ function migrasiData(d){
     k.lembur       = k.lembur||0;
     k.insentif     = k.insentif||0;
     k.offDay       = k.offDay||0;
+    k.tarifOff     = k.tarifOff||0;   // 0 = ikut pengaturan
     k.potongKasbon = k.potongKasbon||0;
     k.cicilanRutin = k.cicilanRutin||0;
   });
@@ -671,13 +746,22 @@ function simpan(){
   data.jatahOff = keAngka(document.getElementById('jatahOff').value);
   data.potonganPerOff = keAngka(document.getElementById('potonganPerOff').value);
   data.kerajinanHangus = document.getElementById('kerajinanHangus').checked;
+  if(MODE_CONTOH) return;                       // mode contoh: jangan timpa data asli
   try{ localStorage.setItem(KUNCI, JSON.stringify(data)); }catch(e){}
 }
 function muat(){
-  try{
-    const t = localStorage.getItem(KUNCI);
-    if(t) data = JSON.parse(t);
-  }catch(e){}
+  if(MODE_CONTOH){
+    try{
+      const t = sessionStorage.getItem('hitungGaji_contoh');
+      if(t) data = JSON.parse(t);
+    }catch(e){}
+    document.getElementById('spandukContoh').hidden = false;
+  } else {
+    try{
+      const t = localStorage.getItem(KUNCI);
+      if(t) data = JSON.parse(t);
+    }catch(e){}
+  }
   data = migrasiData(data);
   document.getElementById('namaToko').value = data.namaToko ?? 'Justin Jaya Store';
   const skrg = new Date();
@@ -767,7 +851,9 @@ function imporJSON(event){
 /* ---------- hitung ---------- */
 function hitungSatu(k){
   const jatah = keAngka(document.getElementById('jatahOff').value);
-  const tarif = keAngka(document.getElementById('potonganPerOff').value);
+  // jatah off sama buat semua orang, tapi tarif potongannya bisa beda tiap karyawan.
+  // kalau kolom karyawan dikosongkan → pakai nilai bawaan dari Pengaturan.
+  const tarif = (k.tarifOff > 0) ? k.tarifOff : keAngka(document.getElementById('potonganPerOff').value);
   const hangusAktif = document.getElementById('kerajinanHangus').checked;
 
   const offLebih = Math.max(0, (k.offDay||0) - jatah);
@@ -785,7 +871,7 @@ function hitungSatu(k){
   const sebelumKasbon = pemasukan - potonganOff;
   const total = sebelumKasbon - potongKasbon;
 
-  return { offLebih, potonganOff, kerajinanHangus, kerajinanDapat,
+  return { offLebih, potonganOff, tarif, kerajinanHangus, kerajinanDapat,
            totalUtang, sudahDibayar, sisaSebelum, potongKasbon, sisaSesudah,
            pemasukan, sebelumKasbon, total };
 }
@@ -793,6 +879,8 @@ function hitungSatu(k){
 /* ---------- render daftar ---------- */
 function render(){
   const wadah = document.getElementById('daftarKaryawan');
+  const jatahOff = keAngka(document.getElementById('jatahOff').value);
+  const tarifBawaan = keAngka(document.getElementById('potonganPerOff').value);
   if(data.karyawan.length === 0){
     wadah.innerHTML = '<div class="kosong">Belum ada karyawan.<br>Tekan tombol di bawah untuk menambah.</div>';
   } else {
@@ -854,13 +942,24 @@ function render(){
             </div>
           </div>
           <div class="field">
-            <label>Hari off</label>
+            <label>Hari off <small class="jatah-info">(jatah ${jatahOff} hari)</small></label>
             <div class="stepper">
               <button type="button" onclick="ubahOff(${i},-1)">−</button>
               <input type="text" inputmode="numeric" value="${k.offDay||0}"
                      onchange="ubah(${i},'offDay',this.value)">
               <button type="button" onclick="ubahOff(${i},1)">+</button>
             </div>
+          </div>
+          <div class="field">
+            <label>Potongan per hari off lebih</label>
+            <div class="uang-wrap"><span class="rp">Rp</span>
+              <input type="text" inputmode="numeric" value="${k.tarifOff?titikRibuan(k.tarifOff):''}"
+                     placeholder="${titikRibuan(tarifBawaan)}" oninput="formatUangInput(this)"
+                     onchange="ubah(${i},'tarifOff',this.value)">
+            </div>
+            <div class="field-ket">${k.tarifOff
+              ? `Khusus ${escapeHtml(k.nama||'karyawan ini')}. Kosongkan kalau mau ikut pengaturan.`
+              : `Ikut pengaturan (${keRupiah(tarifBawaan)}). Isi kalau orang ini beda.`}</div>
           </div>
 
           <div class="field" style="grid-column:1 / -1">
@@ -955,7 +1054,7 @@ function render(){
             </div>
             ${(k.lembur||0)>0?`<div class="r"><span>Lembur</span><span class="plus">+ ${keRupiah(k.lembur)}</span></div>`:''}
             ${(k.insentif||0)>0?`<div class="r"><span>Insentif</span><span class="plus">+ ${keRupiah(k.insentif)}</span></div>`:''}
-            <div class="r"><span>Potongan off (${h.offLebih} × ${keRupiah(keAngka(document.getElementById('potonganPerOff').value))})</span>
+            <div class="r"><span>Potongan off (${h.offLebih} × ${keRupiah(h.tarif)})${k.tarifOff?' <span class="tanda-khusus">khusus</span>':''}</span>
               <span class="${h.potonganOff>0?'minus':''}">− ${keRupiah(h.potonganOff)}</span></div>
             <div class="r"><span>Potongan kasbon</span>
               <span class="${h.potongKasbon>0?'minus':''}">− ${keRupiah(h.potongKasbon)}</span></div>
@@ -986,22 +1085,17 @@ function escapeHtml(s){
   return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-/* ---------- render halaman cetak ---------- */
+/* ---------- render halaman cetak (kertas nota 10,4 x 16,4 cm) ---------- */
 function renderCetak(){
   const [th, bl] = (document.getElementById('periode').value || '2026-01').split('-');
   const namaBulan = BULAN[parseInt(bl,10)-1] || '';
   const toko = document.getElementById('namaToko').value || 'Daftar Gaji';
 
-  let tPokok=0,tKerajinan=0,tLembur=0,tInsentif=0,tPotOff=0,tPotKasbon=0,tAkhir=0;
+  let tAkhir = 0;
   const rincianKasbon = [];
-  const baris = data.karyawan.map((k,i)=>{
+
+  const slip = data.karyawan.map((k,i)=>{
     const h = hitungSatu(k);
-    tPokok += k.gajiPokok||0;
-    tKerajinan += h.kerajinanDapat;
-    tLembur += k.lembur||0;
-    tInsentif += k.insentif||0;
-    tPotOff += h.potonganOff;
-    tPotKasbon += h.potongKasbon;
     tAkhir += h.total;
     if(h.totalUtang > 0){
       rincianKasbon.push({
@@ -1009,18 +1103,34 @@ function renderCetak(){
         potong:h.potongKasbon, sisa:h.sisaSesudah
       });
     }
-    return `<tr>
-      <td class="tengah">${i+1}</td>
-      <td class="kiri">${escapeHtml(k.nama)}</td>
-      <td>${titikRibuan(k.gajiPokok||0)}</td>
-      <td>${titikRibuan(h.kerajinanDapat)}</td>
-      <td>${titikRibuan(k.lembur||0)}</td>
-      <td>${titikRibuan(k.insentif||0)}</td>
-      <td class="tengah">${k.offDay||0}</td>
-      <td>${titikRibuan(h.potonganOff)}</td>
-      <td>${titikRibuan(h.potongKasbon)}</td>
-      <td class="terima">${h.total<0?'-':''}${titikRibuan(Math.abs(h.total))}</td>
-    </tr>`;
+
+    // baris yang nilainya 0 nggak usah dicetak, biar notanya pendek & gampang dibaca
+    const baris = [];
+    baris.push(['Gaji pokok', titikRibuan(k.gajiPokok||0)]);
+    baris.push([ 'Uang kerajinan' + (h.kerajinanHangus ? ' (hangus)' : ''),
+                 titikRibuan(h.kerajinanDapat) ]);
+    if(k.lembur)   baris.push(['Uang lembur', titikRibuan(k.lembur)]);
+    if(k.insentif) baris.push(['Insentif', titikRibuan(k.insentif)]);
+    if(h.potonganOff)  baris.push([`Potongan off (${h.offLebih} × ${titikRibuan(h.tarif)})`, '− ' + titikRibuan(h.potonganOff)]);
+    if(h.potongKasbon) baris.push(['Potongan kasbon', '− ' + titikRibuan(h.potongKasbon)]);
+
+    return `
+      <div class="slip">
+        <div class="slip-nama">
+          <span>${i+1}. ${escapeHtml(k.nama || '(tanpa nama)')}</span>
+          <span class="off">Off: ${k.offDay||0} hari</span>
+        </div>
+        ${baris.map(b=>`<div class="baris"><span>${b[0]}</span><b>${b[1]}</b></div>`).join('')}
+        <div class="baris total"><span>GAJI DITERIMA</span>
+          <b>Rp ${h.total<0?'-':''}${titikRibuan(Math.abs(h.total))}</b></div>
+        ${h.totalUtang>0 ? `
+        <div class="sisa-utang">
+          <span>Sisa utang kasbon
+            <small>dari total ${titikRibuan(h.totalUtang)}, sudah dibayar ${titikRibuan(h.sudahDibayar + h.potongKasbon)}</small>
+          </span>
+          <b>Rp ${titikRibuan(h.sisaSesudah)}</b>
+        </div>` : ''}
+      </div>`;
   }).join('');
 
   document.getElementById('halamanCetak').innerHTML = `
@@ -1029,57 +1139,34 @@ function renderCetak(){
       <div class="judul-doc">DAFTAR GAJI KARYAWAN</div>
       <div class="periode">Periode: ${namaBulan} ${th}</div>
     </div>
-    <table class="cetak">
-      <colgroup>
-        <col style="width:4%"><col style="width:17%"><col style="width:10.5%"><col style="width:10%">
-        <col style="width:10%"><col style="width:10%"><col style="width:5%"><col style="width:10%">
-        <col style="width:10.5%"><col style="width:13%">
-      </colgroup>
-      <thead><tr>
-        <th>No</th><th>Nama</th><th>Gaji Pokok<br>(Rp)</th>
-        <th>Kerajinan<br>(Rp)</th><th>Lembur<br>(Rp)</th><th>Insentif<br>(Rp)</th>
-        <th>Off<br>(hari)</th><th>Pot. Off<br>(Rp)</th><th>Pot. Kasbon<br>(Rp)</th>
-        <th>GAJI DITERIMA<br>(Rp)</th>
-      </tr></thead>
-      <tbody>${baris}
-        <tr class="jumlah">
-          <td colspan="2" class="kiri">JUMLAH</td>
-          <td>${titikRibuan(tPokok)}</td>
-          <td>${titikRibuan(tKerajinan)}</td>
-          <td>${titikRibuan(tLembur)}</td>
-          <td>${titikRibuan(tInsentif)}</td>
-          <td></td>
-          <td>${titikRibuan(tPotOff)}</td>
-          <td>${titikRibuan(tPotKasbon)}</td>
-          <td class="terima">${tAkhir<0?'-':''}${titikRibuan(Math.abs(tAkhir))}</td>
-        </tr>
-      </tbody>
-    </table>
+    ${slip || '<div class="slip">Belum ada karyawan.</div>'}
+    <div class="cetak-jumlah">
+      <span>TOTAL ${data.karyawan.length} ORANG</span>
+      <b>Rp ${tAkhir<0?'-':''}${titikRibuan(Math.abs(tAkhir))}</b>
+    </div>
     ${rincianKasbon.length ? `
     <div class="cetak-kasbon">
-      <div class="judul-kasbon">Kartu Utang / Kasbon Karyawan</div>
-      <table class="cetak kasbon-detail">
-        <colgroup><col style="width:24%"><col style="width:17%"><col style="width:22%"><col style="width:20%"><col style="width:17%"></colgroup>
+      <div class="judul-kasbon">Kartu Utang / Kasbon</div>
+      <table class="kasbon-detail">
+        <colgroup><col style="width:31%"><col style="width:23%"><col style="width:23%"><col style="width:23%"></colgroup>
         <thead><tr>
-          <th style="text-align:left">Nama</th><th>Total Utang<br>(Rp)</th>
-          <th>Sudah Dibayar<br>s/d Bulan Lalu (Rp)</th><th>Potongan<br>Bulan Ini (Rp)</th>
-          <th>Sisa Utang<br>(Rp)</th>
+          <th style="text-align:left">Nama</th><th>Total<br>Utang</th>
+          <th>Potong<br>Bln Ini</th><th>Sisa<br>Utang</th>
         </tr></thead>
         <tbody>
           ${rincianKasbon.map(r=>`<tr>
             <td class="kiri">${escapeHtml(r.nama)}</td>
             <td>${titikRibuan(r.totalUtang)}</td>
-            <td>${titikRibuan(r.sudahDibayar)}</td>
             <td>${titikRibuan(r.potong)}</td>
-            <td><b>${titikRibuan(r.sisa)}</b></td>
+            <td class="sisa">${titikRibuan(r.sisa)}</td>
           </tr>`).join('')}
         </tbody>
       </table>
     </div>` : ''}
     <div class="cetak-ttd">
       <div class="blok">
-        Palembang, ______________<br>Diperiksa,
-        <div class="garis-ttd">( ______________________ )</div>
+        Palembang, __________<br>Diperiksa,
+        <div class="garis-ttd">( ________________ )</div>
       </div>
     </div>`;
 }
@@ -1165,7 +1252,7 @@ async function hapusCicilan(i, j){
 /* karyawan */
 function tambahKaryawan(){
   data.karyawan.push({ id:idBaru(), nama:'', gajiPokok:0, kerajinan:0, lembur:0, insentif:0,
-                       offDay:0, utang:[], cicilan:[], potongKasbon:0, cicilanRutin:0 });
+                       offDay:0, tarifOff:0, utang:[], cicilan:[], potongKasbon:0, cicilanRutin:0 });
   simpanDanHitung();
   setTimeout(()=>{
     const semua = document.querySelectorAll('.kartu-atas input.nama');

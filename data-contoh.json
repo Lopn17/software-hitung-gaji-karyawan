@@ -1,0 +1,105 @@
+{
+  "versi": 3,
+  "keterangan": "DATA CONTOH / DUMMY untuk uji coba cetak. Impor lewat tombol 'Impor (.json)' di menu Pengaturan potongan. PERHATIAN: impor akan MENGGANTI data yang sedang aktif, jadi Ekspor dulu data asli sebelum pakai file ini. Kalau cuma mau lihat hasil cetak tanpa risiko, buka tes-cetak.html.",
+  "namaToko": "Justin Jaya Store",
+  "periode": "2026-08",
+  "jatahOff": 4,
+  "potonganPerOff": 100000,
+  "kerajinanHangus": true,
+  "karyawan": [
+    {
+      "nama": "Kepin Saputra",
+      "gajiPokok": 3000000,
+      "kerajinan": 200000,
+      "lembur": 450000,
+      "insentif": 250000,
+      "offDay": 7,
+      "tarifOff": 150000,
+      "utang": [
+        { "tanggal": "2026-01-10", "jumlah": 5000000, "ket": "Pinjam buat motor" },
+        { "tanggal": "2026-03-22", "jumlah": 1000000, "ket": "Kasbon berobat" }
+      ],
+      "cicilan": [
+        { "tanggal": "2026-06-30", "periode": "2026-06", "jumlah": 500000 },
+        { "tanggal": "2026-07-31", "periode": "2026-07", "jumlah": 500000 }
+      ],
+      "potongKasbon": 500000,
+      "cicilanRutin": 500000
+    },
+    {
+      "nama": "Budi Santoso",
+      "gajiPokok": 2500000,
+      "kerajinan": 300000,
+      "lembur": 125000,
+      "insentif": 0,
+      "offDay": 2,
+      "tarifOff": 0,
+      "utang": [
+        { "tanggal": "2026-08-05", "jumlah": 200000, "ket": "Kasbon" }
+      ],
+      "cicilan": [],
+      "potongKasbon": 200000,
+      "cicilanRutin": 0
+    },
+    {
+      "nama": "Siti Aminah",
+      "gajiPokok": 2200000,
+      "kerajinan": 300000,
+      "lembur": 0,
+      "insentif": 150000,
+      "offDay": 3,
+      "tarifOff": 0,
+      "utang": [],
+      "cicilan": [],
+      "potongKasbon": 0,
+      "cicilanRutin": 0
+    },
+    {
+      "nama": "Muhammad Sulaiman Abdillah",
+      "gajiPokok": 2800000,
+      "kerajinan": 250000,
+      "lembur": 375000,
+      "insentif": 100000,
+      "offDay": 6,
+      "tarifOff": 75000,
+      "utang": [
+        { "tanggal": "2026-05-14", "jumlah": 1500000, "ket": "Kasbon sekolah anak" }
+      ],
+      "cicilan": [
+        { "tanggal": "2026-07-31", "periode": "2026-07", "jumlah": 1200000 }
+      ],
+      "potongKasbon": 300000,
+      "cicilanRutin": 300000
+    },
+    {
+      "nama": "Dwi Cahyono",
+      "gajiPokok": 2350000,
+      "kerajinan": 250000,
+      "lembur": 300000,
+      "insentif": 0,
+      "offDay": 4,
+      "tarifOff": 0,
+      "utang": [],
+      "cicilan": [],
+      "potongKasbon": 0,
+      "cicilanRutin": 0
+    },
+    {
+      "nama": "Rina Wati",
+      "gajiPokok": 2100000,
+      "kerajinan": 200000,
+      "lembur": 0,
+      "insentif": 0,
+      "offDay": 9,
+      "tarifOff": 200000,
+      "utang": [
+        { "tanggal": "2026-02-01", "jumlah": 800000, "ket": "Kasbon lebaran" }
+      ],
+      "cicilan": [
+        { "tanggal": "2026-07-31", "periode": "2026-07", "jumlah": 800000 }
+      ],
+      "potongKasbon": 0,
+      "cicilanRutin": 0
+    }
+  ]
+}
