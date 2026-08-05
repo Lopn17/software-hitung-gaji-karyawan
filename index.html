@@ -373,6 +373,13 @@
   .rincian .r > span:last-child{font-weight:700}
   .rincian .r .minus{color:var(--merah);font-weight:800}
   .rincian .r .plus{color:var(--hijau);font-weight:800}
+  /* garis pemisah: di atasnya = hak karyawan, di bawahnya = potongan pribadi (kosan, kasbon) */
+  .rincian .r.subtotal{
+    border-top:1.5px dashed var(--garis-kuat);padding-top:9px;margin-top:2px;font-size:15px;
+  }
+  .rincian .r.subtotal > span:first-child{color:var(--tinta);font-weight:800}
+  .rincian .r.subtotal > span:last-child{font-weight:800}
+  .rincian .r.subtotal .negatif{color:var(--merah)}
   .rincian .r.total{
     border-top:2px solid var(--garis-kuat);padding-top:10px;margin-top:2px;
     font-weight:800;font-size:16.5px;
@@ -392,6 +399,11 @@
   .bar-info{flex:1;min-width:0}
   .bar-info .label{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;opacity:.95;font-weight:700}
   .bar-info .nilai{font-size:21px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar-info .sub{
+    font-size:12px;font-weight:600;opacity:.9;margin-top:2px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .bar-info .sub b{font-weight:800}
   .tombol-cetak{
     background:transparent;color:#fff;border:2px solid rgba(255,255,255,.55);border-radius:10px;
     padding:11px 13px;font-family:inherit;font-size:14px;font-weight:800;
@@ -532,6 +544,11 @@
     }
     .slip .baris:last-child{border-bottom:none}
     .slip .baris b{font-weight:700;white-space:nowrap}
+    .slip .baris.subtotal{
+      border-bottom:none;border-top:1.2px solid #000;margin-top:2px;
+      padding-top:4px;font-size:12px;font-weight:800;letter-spacing:.01em;
+    }
+    .slip .baris.subtotal b{font-size:13px;font-weight:800}
     .slip .baris.total{
       border-bottom:none;border-top:1.5px solid #000;margin-top:3px;
       padding-top:5px;font-size:13.5px;font-weight:800;
@@ -544,13 +561,19 @@
     }
     .slip .sisa-utang small{display:block;font-weight:500;font-size:9.5px}
 
-    /* total semua karyawan */
+    /* total semua karyawan — harus dibayar dulu, baru potongan, baru bersih */
     .cetak-jumlah{
-      display:flex;justify-content:space-between;gap:8px;align-items:baseline;
       border-top:2px solid #000;border-bottom:2px solid #000;
       padding:5px 2px;margin:2px 0 8px;font-size:12.5px;font-weight:800;
+      page-break-inside:avoid;
     }
-    .cetak-jumlah b{font-size:15px}
+    .cetak-jumlah .baris-jml{
+      display:flex;justify-content:space-between;gap:8px;align-items:baseline;padding:1.5px 0;
+    }
+    .cetak-jumlah .baris-jml.kecil{font-size:11px;font-weight:600}
+    .cetak-jumlah .baris-jml.besar{border-top:1.2px solid #000;margin-top:3px;padding-top:4px}
+    .cetak-jumlah b{font-size:13px;white-space:nowrap}
+    .cetak-jumlah .baris-jml.besar b{font-size:15px}
 
     /* kartu utang ringkas */
     .cetak-kasbon{margin-top:8px;page-break-inside:avoid}
@@ -584,12 +607,12 @@
     .rk-kop .periode{font-size:14px;font-weight:800;margin-top:3px}
     .rk-kop .kanan{text-align:right;font-size:10.5px;line-height:1.5;white-space:nowrap}
 
-    .rk-kpi{display:flex;gap:8px;margin-bottom:12px}
+    .rk-kpi{display:flex;gap:6px;margin-bottom:12px}
     .rk-kpi div{
-      flex:1;border:1.5px solid #000;padding:7px 9px;
+      flex:1;border:1.5px solid #000;padding:7px 7px;
     }
-    .rk-kpi .label{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-    .rk-kpi .nilai{font-size:14px;font-weight:800;margin-top:3px;line-height:1.15}
+    .rk-kpi .label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;line-height:1.25}
+    .rk-kpi .nilai{font-size:12.5px;font-weight:800;margin-top:3px;line-height:1.15}
 
     .rk-judul{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin:14px 0 4px}
     table.rk{width:100%;border-collapse:collapse;table-layout:fixed}
@@ -601,6 +624,7 @@
     table.rk td.kiri{text-align:left;font-weight:700}
     table.rk td.tengah{text-align:center}
     table.rk td.terima{font-weight:800;font-size:13px}
+    table.rk td.harus{font-weight:800}
     table.rk tbody tr:nth-child(even) td{background:#F6F6F3}
     table.rk tr.jumlah td{background:#DCDCD6;font-weight:800}
     table.rk thead{display:table-header-group}
@@ -724,8 +748,9 @@
 <div class="bar-total">
   <div class="bar-inner">
     <div class="bar-info">
-      <div class="label">Total gajian · <span id="jumlahOrang">0</span> orang</div>
+      <div class="label">Total gaji bersih · <span id="jumlahOrang">0</span> orang</div>
       <div class="nilai angka" id="totalSemua">Rp 0</div>
+      <div class="sub angka">Harus dibayar <b id="totalHarusBar">Rp 0</b><span id="totalPotBar"></span></div>
     </div>
     <button class="tombol-cetak" onclick="cetak('rangkuman')" title="Rangkuman sebulan, 1 lembar A4 — enak buat arsip / dikirim WA">📄 Rangkuman</button>
     <button class="tombol-cetak utama" onclick="cetak('nota')" title="Nota gaji per karyawan">🧾 Nota</button>
@@ -1096,12 +1121,17 @@ function hitungSatu(k){
   const potonganLain = daftarLain.reduce((a,b)=>a+(b.jumlah||0),0);
 
   const pemasukan = (k.gajiPokok||0) + kerajinanDapat + (k.lembur||0) + (k.insentif||0);
-  const sebelumKasbon = pemasukan - potonganOff - potonganLain;
+  // "gaji yang harus dibayar" = hasil kerja bulan ini (pokok + kerajinan + lembur + insentif,
+  // dikurangi potongan off). Ini angka hak karyawan SEBELUM urusan pribadi dia
+  // (kosan, kasbon, dll) dipotong. Setelah dipotong itu semua → gaji bersih.
+  const harusDibayar  = pemasukan - potonganOff;
+  const potonganBawah = potonganLain + potongKasbon;
+  const sebelumKasbon = harusDibayar - potonganLain;
   const total = sebelumKasbon - potongKasbon;
 
   return { offLebih, potonganOff, tarif, kerajinanHangus, kerajinanDapat, potonganLain,
            totalUtang, sudahDibayar, sisaSebelum, potongKasbon, sisaSesudah,
-           pemasukan, sebelumKasbon, total };
+           pemasukan, harusDibayar, potonganBawah, sebelumKasbon, total };
 }
 
 /* ---------- render daftar ---------- */
@@ -1161,6 +1191,9 @@ function render(){
               <input type="text" inputmode="numeric" value="${k.lembur?titikRibuan(k.lembur):''}"
                      placeholder="0" oninput="formatUangInput(this)" onchange="ubah(${i},'lembur',this.value)">
             </div>
+            ${(k.offDay||0) < jatahOff
+              ? `<div class="field-ket">Off cuma ${k.offDay||0} hari dari jatah ${jatahOff} — kurang ${jatahOff-(k.offDay||0)} hari, biasanya dapat lembur.</div>`
+              : ''}
           </div>
           <div class="field">
             <label>Insentif / bonus</label>
@@ -1309,12 +1342,14 @@ function render(){
             ${(k.insentif||0)>0?`<div class="r"><span>Insentif</span><span class="plus">+ ${keRupiah(k.insentif)}</span></div>`:''}
             <div class="r"><span>Potongan off (${h.offLebih} × ${keRupiah(h.tarif)})${k.tarifOff?' <span class="tanda-khusus">khusus</span>':''}</span>
               <span class="${h.potonganOff>0?'minus':''}">− ${keRupiah(h.potonganOff)}</span></div>
+            <div class="r subtotal"><span>Gaji yang harus dibayar</span>
+              <span class="${h.harusDibayar<0?'negatif':''}">${keRupiah(h.harusDibayar)}</span></div>
             ${k.potonganLain.filter(p=>p.jumlah>0).map(p=>`
             <div class="r"><span>${escapeHtml(p.ket||'Potongan lain')}</span>
               <span class="minus">− ${keRupiah(p.jumlah)}</span></div>`).join('')}
             <div class="r"><span>Potongan kasbon</span>
               <span class="${h.potongKasbon>0?'minus':''}">− ${keRupiah(h.potongKasbon)}</span></div>
-            <div class="r total"><span>Gaji diterima</span>
+            <div class="r total"><span>Gaji bersih (diterima)</span>
               <span class="${h.total<0?'negatif':''}">${keRupiah(h.total)}</span></div>
             ${h.totalUtang>0?`<div class="sisa-note">Sisa utang setelah gajian ini: <b>${keRupiah(h.sisaSesudah)}</b></div>`:''}
           </div>
@@ -1324,15 +1359,21 @@ function render(){
   }
 
   // total keseluruhan + bahan buat tab navigasi & panel ringkasan
-  let total = 0;
+  let total = 0, totalHarus = 0;
   const ringkasan = data.karyawan.map(k=>{
     const h = hitungSatu(k);
     total += h.total;
+    totalHarus += h.harusDibayar;
     return { id:k.id, nama:k.nama, total:h.total, sisaUtang:h.sisaSesudah,
-             totalUtang:h.totalUtang, potongKasbon:h.potongKasbon };
+             totalUtang:h.totalUtang, potongKasbon:h.potongKasbon,
+             harusDibayar:h.harusDibayar, potonganLain:h.potonganLain };
   });
   document.getElementById('totalSemua').textContent = keRupiah(total);
   document.getElementById('jumlahOrang').textContent = data.karyawan.length;
+  document.getElementById('totalHarusBar').textContent = keRupiah(totalHarus);
+  const selisih = totalHarus - total;   // total yang dipotong (kasbon + kosan dll)
+  document.getElementById('totalPotBar').textContent =
+    selisih > 0 ? ' − potongan ' + keRupiah(selisih) : '';
   renderNavigasi(ringkasan);
 
   // tombol batal tutup bulan
@@ -1427,6 +1468,8 @@ function renderNavigasi(ringkasan){
   const totalGaji  = ringkasan.reduce((a,b)=>a+b.total,0);
   const totalUtang = ringkasan.reduce((a,b)=>a+b.sisaUtang,0);
   const totalPotong= ringkasan.reduce((a,b)=>a+b.potongKasbon,0);
+  const totalHarus = ringkasan.reduce((a,b)=>a+b.harusDibayar,0);
+  const totalLain  = ringkasan.reduce((a,b)=>a+b.potonganLain,0);
 
   rel.innerHTML = `
     <div class="rel-judul"><span>Ringkasan gaji</span><span>${ringkasan.length} orang</span></div>
@@ -1444,9 +1487,11 @@ function renderNavigasi(ringkasan){
         </button>`).join('')}
     </div>
     <div class="rel-total">
-      <div class="baris"><span>Potongan kasbon</span><span class="angka">${keRupiah(totalPotong)}</span></div>
+      <div class="baris"><span>Gaji harus dibayar</span><span class="angka">${keRupiah(totalHarus)}</span></div>
+      <div class="baris"><span>Potongan lain (kosan dll)</span><span class="angka">− ${keRupiah(totalLain)}</span></div>
+      <div class="baris"><span>Potongan kasbon</span><span class="angka">− ${keRupiah(totalPotong)}</span></div>
       <div class="baris"><span>Sisa utang semua</span><span class="angka ${totalUtang>0?'merah':''}">${keRupiah(totalUtang)}</span></div>
-      <div class="baris besar"><span>Total gajian</span><span class="angka">${keRupiah(totalGaji)}</span></div>
+      <div class="baris besar"><span>Total gaji bersih</span><span class="angka">${keRupiah(totalGaji)}</span></div>
     </div>`;
 
   tandaiTabAktif();
@@ -1515,12 +1560,15 @@ function renderCetak(){
   const namaBulan = BULAN[parseInt(bl,10)-1] || '';
   const toko = document.getElementById('namaToko').value || 'Daftar Gaji';
 
-  let tAkhir = 0;
+  let tAkhir = 0, tHarus = 0, tKasbon = 0, tLain = 0;
   const rincianKasbon = [];
 
   const slip = data.karyawan.map((k,i)=>{
     const h = hitungSatu(k);
     tAkhir += h.total;
+    tHarus += h.harusDibayar;
+    tKasbon += h.potongKasbon;
+    tLain += h.potonganLain;
     if(h.totalUtang > 0){
       rincianKasbon.push({
         nama:k.nama, totalUtang:h.totalUtang, sudahDibayar:h.sudahDibayar,
@@ -1529,17 +1577,20 @@ function renderCetak(){
     }
 
     // baris yang nilainya 0 nggak usah dicetak, biar notanya pendek & gampang dibaca
-    const baris = [];
-    baris.push(['Gaji pokok', titikRibuan(k.gajiPokok||0)]);
-    baris.push([ 'Uang kerajinan' + (h.kerajinanHangus ? ' (hangus)' : ''),
-                 titikRibuan(h.kerajinanDapat) ]);
-    if(k.lembur)   baris.push(['Uang lembur', titikRibuan(k.lembur)]);
-    if(k.insentif) baris.push(['Insentif', titikRibuan(k.insentif)]);
-    if(h.potonganOff)  baris.push([`Potongan off (${h.offLebih} × ${titikRibuan(h.tarif)})`, '− ' + titikRibuan(h.potonganOff)]);
+    // atas = hak karyawan, bawah = potongan pribadi (kosan, kasbon)
+    const atas = [], bawah = [];
+    atas.push(['Gaji pokok', titikRibuan(k.gajiPokok||0)]);
+    atas.push([ 'Uang kerajinan' + (h.kerajinanHangus ? ' (hangus)' : ''),
+                titikRibuan(h.kerajinanDapat) ]);
+    if(k.lembur)   atas.push(['Uang lembur', titikRibuan(k.lembur)]);
+    if(k.insentif) atas.push(['Insentif', titikRibuan(k.insentif)]);
+    if(h.potonganOff)  atas.push([`Potongan off (${h.offLebih} × ${titikRibuan(h.tarif)})`, '− ' + titikRibuan(h.potonganOff)]);
     (k.potonganLain||[]).forEach(p=>{
-      if(p.jumlah > 0) baris.push([escapeHtml(p.ket || 'Potongan lain'), '− ' + titikRibuan(p.jumlah)]);
+      if(p.jumlah > 0) bawah.push([escapeHtml(p.ket || 'Potongan lain'), '− ' + titikRibuan(p.jumlah)]);
     });
-    if(h.potongKasbon) baris.push(['Potongan kasbon', '− ' + titikRibuan(h.potongKasbon)]);
+    if(h.potongKasbon) bawah.push(['Potongan kasbon', '− ' + titikRibuan(h.potongKasbon)]);
+
+    const garisBaris = (b)=>`<div class="baris"><span>${b[0]}</span><b>${b[1]}</b></div>`;
 
     return `
       <div class="slip">
@@ -1547,8 +1598,12 @@ function renderCetak(){
           <span>${i+1}. ${escapeHtml(k.nama || '(tanpa nama)')}</span>
           <span class="off">Off: ${k.offDay||0} hari</span>
         </div>
-        ${baris.map(b=>`<div class="baris"><span>${b[0]}</span><b>${b[1]}</b></div>`).join('')}
-        <div class="baris total"><span>GAJI DITERIMA</span>
+        ${atas.map(garisBaris).join('')}
+        ${bawah.length ? `
+        <div class="baris subtotal"><span>GAJI YANG HARUS DIBAYAR</span>
+          <b>Rp ${h.harusDibayar<0?'-':''}${titikRibuan(Math.abs(h.harusDibayar))}</b></div>
+        ${bawah.map(garisBaris).join('')}` : ''}
+        <div class="baris total"><span>GAJI ${bawah.length?'BERSIH ':''}DITERIMA</span>
           <b>Rp ${h.total<0?'-':''}${titikRibuan(Math.abs(h.total))}</b></div>
         ${h.totalUtang>0 ? `
         <div class="sisa-utang">
@@ -1568,8 +1623,12 @@ function renderCetak(){
     </div>
     ${slip || '<div class="slip">Belum ada karyawan.</div>'}
     <div class="cetak-jumlah">
-      <span>TOTAL ${data.karyawan.length} ORANG</span>
-      <b>Rp ${tAkhir<0?'-':''}${titikRibuan(Math.abs(tAkhir))}</b>
+      <div class="baris-jml"><span>TOTAL HARUS DIBAYAR (${data.karyawan.length} orang)</span>
+        <b>Rp ${tHarus<0?'-':''}${titikRibuan(Math.abs(tHarus))}</b></div>
+      ${tLain   ? `<div class="baris-jml kecil"><span>Potongan lain (kosan dll)</span><b>− Rp ${titikRibuan(tLain)}</b></div>` : ''}
+      ${tKasbon ? `<div class="baris-jml kecil"><span>Potongan kasbon</span><b>− Rp ${titikRibuan(tKasbon)}</b></div>` : ''}
+      <div class="baris-jml besar"><span>TOTAL GAJI BERSIH</span>
+        <b>Rp ${tAkhir<0?'-':''}${titikRibuan(Math.abs(tAkhir))}</b></div>
     </div>
     ${rincianKasbon.length ? `
     <div class="cetak-kasbon">
@@ -1604,7 +1663,7 @@ function renderRangkuman(){
   const toko = document.getElementById('namaToko').value || 'Daftar Gaji';
   const hariIni = tglHariIni().split('-');
 
-  let tPokok=0, tTambahan=0, tPotongan=0, tAkhir=0,
+  let tPokok=0, tTambahan=0, tPotongan=0, tAkhir=0, tHarus=0,
       tKerajinan=0, tLembur=0, tInsentif=0, tPotOff=0, tPotLain=0, tPotKasbon=0,
       tSisaUtang=0;
   const rincianKasbon = [], catatanLain = [];
@@ -1612,8 +1671,9 @@ function renderRangkuman(){
   const orang = data.karyawan.map((k,i)=>{
     const h = hitungSatu(k);
     const tambahan = h.kerajinanDapat + (k.lembur||0) + (k.insentif||0);
-    const potongan = h.potonganOff + h.potonganLain + h.potongKasbon;
+    const potongan = h.potonganBawah;   // kasbon + potongan lain (potongan off udah di atas garis)
     tPokok+=k.gajiPokok||0; tTambahan+=tambahan; tPotongan+=potongan; tAkhir+=h.total;
+    tHarus+=h.harusDibayar;
     tKerajinan+=h.kerajinanDapat; tLembur+=k.lembur||0; tInsentif+=k.insentif||0;
     tPotOff+=h.potonganOff; tPotLain+=h.potonganLain; tPotKasbon+=h.potongKasbon;
     tSisaUtang+=h.sisaSesudah;
@@ -1643,19 +1703,22 @@ function renderRangkuman(){
     </div>
 
     <div class="rk-kpi">
-      <div><div class="label">Total gaji dibayar</div><div class="nilai">${keRupiah(tAkhir)}</div></div>
+      <div><div class="label">Gaji harus dibayar</div><div class="nilai">${keRupiah(tHarus)}</div></div>
       <div><div class="label">Potongan kasbon</div><div class="nilai">${keRupiah(tPotKasbon)}</div></div>
       <div><div class="label">Potongan lain</div><div class="nilai">${keRupiah(tPotLain)}</div></div>
+      <div><div class="label">Gaji bersih dibayar</div><div class="nilai">${keRupiah(tAkhir)}</div></div>
       <div><div class="label">Sisa utang semua</div><div class="nilai">${keRupiah(tSisaUtang)}</div></div>
     </div>
 
     <div class="rk-judul">A. Ringkasan gaji per karyawan</div>
     <table class="rk">
-      <colgroup><col style="width:6%"><col style="width:29%"><col style="width:16%">
-        <col style="width:15%"><col style="width:15%"><col style="width:19%"></colgroup>
+      <colgroup><col style="width:5%"><col style="width:21%"><col style="width:12%">
+        <col style="width:11%"><col style="width:10%"><col style="width:14%">
+        <col style="width:12%"><col style="width:15%"></colgroup>
       <thead><tr>
         <th>No</th><th style="text-align:left">Nama</th><th>Gaji Pokok<br>(Rp)</th>
-        <th>Tambahan<br>(Rp)</th><th>Potongan<br>(Rp)</th><th>GAJI DITERIMA<br>(Rp)</th>
+        <th>Tambahan<br>(Rp)</th><th>Pot. Off<br>(Rp)</th><th>HARUS DIBAYAR<br>(Rp)</th>
+        <th>Kasbon &amp;<br>Pot. Lain (Rp)</th><th>GAJI BERSIH<br>(Rp)</th>
       </tr></thead>
       <tbody>
         ${orang.map(o=>`<tr>
@@ -1663,6 +1726,8 @@ function renderRangkuman(){
           <td class="kiri">${escapeHtml(o.k.nama||'Tanpa nama')}</td>
           <td>${titikRibuan(o.k.gajiPokok||0)}</td>
           <td>${o.tambahan?'+ '+titikRibuan(o.tambahan):'0'}</td>
+          <td>${o.h.potonganOff?'− '+titikRibuan(o.h.potonganOff):'0'}</td>
+          <td class="harus">${o.h.harusDibayar<0?'-':''}${titikRibuan(Math.abs(o.h.harusDibayar))}</td>
           <td>${o.potongan?'− '+titikRibuan(o.potongan):'0'}</td>
           <td class="terima">${o.h.total<0?'-':''}${titikRibuan(Math.abs(o.h.total))}</td>
         </tr>`).join('')}
@@ -1670,11 +1735,12 @@ function renderRangkuman(){
           <td colspan="2" class="kiri">JUMLAH</td>
           <td>${titikRibuan(tPokok)}</td>
           <td>+ ${titikRibuan(tTambahan)}</td>
+          <td>− ${titikRibuan(tPotOff)}</td>
+          <td class="harus">${tHarus<0?'-':''}${titikRibuan(Math.abs(tHarus))}</td>
           <td>− ${titikRibuan(tPotongan)}</td>
           <td class="terima">${tAkhir<0?'-':''}${titikRibuan(Math.abs(tAkhir))}</td>`)}
       </tbody>
     </table>
-
     <div class="rk-blok">
       <div class="rk-judul">B. Rincian tambahan &amp; potongan</div>
       <table class="rk kecil">
